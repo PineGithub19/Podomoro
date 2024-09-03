@@ -1,0 +1,31 @@
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+  --primary-green: #729f88;
+  --white-color: #fff;
+  --black-color: #000;
+  --coin-color: #ffd700;
+
+  --green-bold-color: #16423c;
+  --green-medium-color: #6a9c89;
+  --green-light-color: #c4dad2;
+  --green-gray-color: #e9efec;
+  --green-bright-color: #83ceaf;
+  --yellow-bold-color: #fcde70;
+  --yellow-brown-color: #e8b86d;
+  --canceled-red-color: #d2042d;
+
+  --primary-width: 1600px;
+  --primary-header-height: 60px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
