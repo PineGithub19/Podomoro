@@ -3,7 +3,11 @@ import classNames from "classnames/bind";
 import styles from "./ForestBody.module.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTree } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTree,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +36,17 @@ function ForestBody() {
               </div>
             ))}
           </div>
-          <div className={cx("date_controller")}>date controller</div>
+          <div className={cx("date_controller")}>
+            <FontAwesomeIcon
+              icon={faChevronLeft}
+              className={cx("date_controller_icon_next")}
+            />
+            <p className={cx("date_controller_text")}>01/01/2024</p>
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className={cx("date_controller_icon_previous")}
+            />
+          </div>
           <div className={cx("view_trees_container")}>
             <div className={cx("view_trees_item")}>
               <img
