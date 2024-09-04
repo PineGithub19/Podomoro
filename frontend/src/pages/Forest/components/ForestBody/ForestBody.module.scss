@@ -1,0 +1,366 @@
+:root {
+  --width-distribution: 800px;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  padding-bottom: 64px;
+}
+
+.time_distribution {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.time_distribution_header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dark-green-color);
+  width: 100%;
+
+  padding: 32px;
+  padding-bottom: 120px;
+}
+
+.date_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--green-bold-color);
+  border-radius: 10px;
+  padding: 3px;
+
+  margin-bottom: 24px;
+}
+
+.date_item {
+  font-size: 2rem;
+  padding: 8px 48px;
+  color: var(--white-color);
+  cursor: pointer;
+}
+
+.date_item.active {
+  background-color: var(--white-color);
+  border-radius: 10px;
+  color: var(--green-bold-color);
+  transition: right 0.3s ease, back;
+}
+
+.view_trees_container {
+  width: 800px;
+  height: 400px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    background-color: transparent;
+  }
+}
+
+/* VIEW TREES*/
+
+.view_trees_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.tree_avatar {
+  width: 64px;
+  height: 64px;
+  background-color: var(--white-color);
+  border-radius: 50px;
+}
+
+.view_trees_item_info {
+  margin-left: 8px;
+}
+
+.view_trees_item_name {
+  font-size: 1.6rem;
+  color: var(--white-color);
+  margin-bottom: 8px;
+}
+
+.view_trees_item_progress_container {
+  display: flex;
+  align-items: center;
+}
+
+.view_trees_item_progress {
+  width: 500px;
+  height: 16px;
+  background-color: var(--white-color);
+  border-radius: 50px;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--progress-value);
+    height: 100%;
+    background-color: var(--primary-green);
+    border-radius: 50px;
+  }
+}
+
+.view_trees_item_count {
+  font-size: 1.6rem;
+  color: var(--white-color);
+  margin-left: 8px;
+}
+
+/* VIEW TREES FOOTER */
+
+.view_trees_footer {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  width: 800px;
+}
+
+.view_trees,
+.analyze_tree {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view_tree_icon,
+.analyze_tree_icon {
+  font-size: 2.8rem;
+  margin-right: 4px;
+}
+
+.view_tree_value,
+.analyze_tree_value {
+  font-size: 2rem;
+}
+
+.view_trees {
+  margin-right: 36px;
+}
+
+.view_tree_icon,
+.view_tree_value {
+  color: var(--white-color);
+}
+
+.analyze_tree_icon,
+.analyze_tree_value {
+  color: var(--yellow-brown-color);
+}
+
+/* TIME DISTRIBUTION CHART */
+
+.time_distribution_chart {
+  width: var(--width-distribution);
+
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+
+  padding: 32px;
+  background-color: var(--white-color);
+  border-radius: 10px;
+
+  position: relative;
+  top: -64px;
+}
+
+.time_distribution_chart_title {
+  font-size: 3rem;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.time_distribution_chart_statistic {
+  display: flex;
+  align-items: center;
+
+  padding: 24px 0;
+}
+
+.time_distribution_chart_statistic_title,
+.time_distribution_chart_statistic_value {
+  font-size: 1.8rem;
+}
+
+.time_distribution_chart_statistic_value {
+  color: var(--primary-green);
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+/* TAG DISTRIBUTION */
+
+.tag_distribution {
+  width: var(--width-distribution);
+
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+
+  padding: 32px;
+  background-color: var(--white-color);
+  border-radius: 10px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tag_distribution_title {
+  font-size: 3rem;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tag_distribution_chart {
+}
+
+.tag_distribution_item_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.tag_distribution_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag_distribution_item_dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50px;
+  background-color: var(--primary-green);
+  margin-right: 8px;
+}
+
+.tag_distribution_item_dot.study {
+  background-color: #00ffff;
+}
+
+.tag_distribution_item_dot.rest {
+  background-color: #87ceeb;
+}
+
+.tag_distribution_item_dot.entertainment {
+  background-color: #98fb98;
+}
+
+.tag_distribution_item_dot.other {
+  background-color: #ff5733;
+}
+
+.tag_distribution_item_text {
+  font-size: 1.8rem;
+}
+
+.tag_distribution_statistic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag_distribution_statistic_percentage {
+  font-size: 1.8rem;
+  margin-right: 64px;
+}
+
+.tag_distribution_statistic_value {
+  font-size: 1.8rem;
+}
+
+/* FAVORITE TREES */
+
+.favorite_trees {
+  width: var(--width-distribution);
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--white-color);
+  border-radius: 10px;
+
+  margin-top: 64px;
+  padding: 32px;
+}
+
+.favorite_trees_title {
+  font-size: 3rem;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.favorite_trees_item {
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+}
+
+.favorite_trees_item_order {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-right: 16px;
+}
+
+.favorite_trees_item_avatar {
+  width: 64px;
+  height: 64px;
+}
+
+.favorite_trees_item_info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+}
+
+.favorite_trees_item_name {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.favorite_trees_item_progress_container {
+  display: flex;
+  align-items: center;
+}
+
+.favorite_trees_item_progress {
+  width: 500px;
+  height: 16px;
+  background-color: #ccc;
+  border-radius: 50px;
+  margin-right: 8px;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--progress-all-value);
+    height: 100%;
+    background-color: var(--primary-green);
+    border-radius: 50px;
+  }
+}
+
+.favorite_trees_item_count {
+  font-size: 1.6rem;
+}
