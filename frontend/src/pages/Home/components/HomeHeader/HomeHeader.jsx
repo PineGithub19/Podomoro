@@ -10,14 +10,20 @@ import { faFire, faCoins } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 import styles from "./HomeHeader.module.scss";
+import SideBar from "../../../../components/SideBar";
 
 const cx = classNames.bind(styles);
 
 function HomeHeader({ isRunning }) {
   const [isMusicActive, setIsMusicActive] = useState(true);
+  const [isSideBarActive, setIsSideBarActive] = useState(false);
 
   const handleIsMusicActive = () => {
     setIsMusicActive(!isMusicActive);
+  };
+
+  const handleIsSideBarActive = () => {
+    setIsSideBarActive(!isSideBarActive);
   };
 
   return (
@@ -25,7 +31,11 @@ function HomeHeader({ isRunning }) {
       {!isRunning ? (
         <div className={cx("header")}>
           <div className={cx("header_container")}>
-            <FontAwesomeIcon className={cx("header_menu_icon")} icon={faBars} />
+            <FontAwesomeIcon
+              className={cx("header_menu_icon")}
+              icon={faBars}
+              onClick={handleIsSideBarActive}
+            />
             <div className={cx("header_options")}>
               <FontAwesomeIcon
                 className={cx("hourglass_icon")}
@@ -56,6 +66,12 @@ function HomeHeader({ isRunning }) {
             />
           </div>
         </div>
+      )}
+      {isSideBarActive && (
+        <SideBar
+          isSideBarActive={isSideBarActive}
+          setIsSideBarActive={setIsSideBarActive}
+        />
       )}
     </>
   );
