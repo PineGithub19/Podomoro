@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Forest from "./pages/Forest/Forest";
 import LogIn from "./pages/LogIn/Login";
@@ -11,10 +11,11 @@ import SignUp from "./pages/SignUp/SignUp";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/forest" element={<Forest />} />
       <Route path="/login" element={<LogIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/" element={<Navigate to="/login" />} />
       {/* <Route path="/trees/create" element={<CreateTree />} />
       <Route path="/trees/details/:id" element={<ShowTree />} />
       <Route path="/trees/edit/:id" element={<EditTree />} />
