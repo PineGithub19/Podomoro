@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+import Cookies from "universal-cookie";
+
 import { request } from "../../api/request";
 
 const cx = classNames.bind(styles);
@@ -27,6 +29,9 @@ function LogIn() {
       });
 
       if (response.status === 200) {
+        const cookies = new Cookies();
+        cookies.set("token", response.data.accessToken);
+
         navigateHome("/home");
       }
     } catch (error) {

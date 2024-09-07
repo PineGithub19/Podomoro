@@ -1,0 +1,17 @@
+.date_controller {
+  display: flex;
+  align-items: center;
+  color: var(--white-color);
+  font-size: 1.8rem;
+  margin: 16px 0;
+}
+
+.date_controller_text {
+  margin: 0 32px;
+}
+
+.date_controller_icon_next,
+.date_controller_icon_previous {
+  font-size: 1.8rem;
+  cursor: pointer;
+}

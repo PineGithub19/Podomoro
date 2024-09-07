@@ -13,7 +13,7 @@ import {
   faTree,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const cx = classNames.bind(styles);
 
@@ -21,7 +21,7 @@ const MENU = [
   {
     item: "Home",
     icon: <FontAwesomeIcon icon={faHouse} className={cx("menu_icon")} />,
-    to: "/",
+    to: "/home",
   },
   {
     item: "Forest",
@@ -67,9 +67,9 @@ function SideBar({ isSideBarActive, setIsSideBarActive }) {
     }, 200);
   };
 
-  useEffect(() => {
-    console.log(isActive);
-  }, [isActive]);
+  // useEffect(() => {
+  //   console.log(isActive);
+  // }, [isActive]);
 
   return (
     <div
@@ -83,6 +83,7 @@ function SideBar({ isSideBarActive, setIsSideBarActive }) {
         })}
       >
         <div className={cx("sidebar_header")}>
+          <p className={cx("sidebar_header_title")}>Podomoro</p>
           <FontAwesomeIcon
             icon={faXmark}
             className={cx("sidebar_close_icon")}

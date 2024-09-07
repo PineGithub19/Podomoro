@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./PlantStatus.module.scss";
@@ -5,7 +6,7 @@ import styles from "./PlantStatus.module.scss";
 const cx = classNames.bind(styles);
 const STATUS = ["Study", "Rest", "Entertainment", "Other"];
 
-function PlantStatus() {
+function PlantStatus({ setCurrentStatusId }) {
   const [activeStatus, setActiveStatus] = useState(0);
   const [isShowPopup, setIsShowPopup] = useState(false);
 
@@ -16,6 +17,7 @@ function PlantStatus() {
   const handleChangeStatus = (index) => {
     setActiveStatus(index);
     setIsShowPopup(false);
+    setCurrentStatusId(STATUS[index]);
   };
 
   return (
@@ -58,5 +60,9 @@ function PlantStatus() {
     </div>
   );
 }
+
+PlantStatus.propTypes = {
+  setCurrentStatusId: PropTypes.func,
+};
 
 export default PlantStatus;

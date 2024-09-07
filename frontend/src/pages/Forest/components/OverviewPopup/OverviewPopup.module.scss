@@ -11,6 +11,8 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+
+  animation: fadeIn 0.25s ease-in;
 }
 
 .container {
@@ -25,6 +27,8 @@
 
   background-color: var(--white-color);
   border-radius: 10px;
+
+  animation: slideIn 0.25s ease-in;
 }
 
 .header {
@@ -175,4 +179,22 @@
 .footer_button_confirm {
   background-color: var(--primary-green);
   border-bottom: 4px solid var(--dark-green-color);
+}
+
+@keyframes slideIn {
+  from {
+    top: 0;
+  }
+  to {
+    top: 50%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
