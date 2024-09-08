@@ -103,7 +103,14 @@ function HomeBody({ isRunning, setIsRunning }) {
   useEffect(() => {
     const fetchDefaultSelectedTree = async () => {
       try {
-        const response = await request.get("/trees/my-tree");
+        const cookies = new Cookies();
+        const token = cookies.get("token");
+
+        const response = await request.get("/trees/my-tree", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.status === 200) {
           const defaultTree = response.data.data.find((item) => item.selected);
@@ -126,13 +133,14 @@ function HomeBody({ isRunning, setIsRunning }) {
       const cookies = new Cookies();
       const token = cookies.get("token");
       const duration = DEFAULT_MINUTE * 60 + DEFAULT_SECOND;
+      console.log(startDatePlanting, startDatePlanting.toISOString());
 
       try {
         await request.post("/planting/complete", {
           token: token,
           duration: duration,
-          start: startDatePlanting,
-          end: endDatePlanting,
+          start: startDatePlanting.toISOString(),
+          end: endDatePlanting.toISOString(),
           status: statusPlanting,
           tag: currentStatusId,
           treeId: currentTreeId,

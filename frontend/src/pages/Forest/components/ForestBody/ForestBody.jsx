@@ -9,6 +9,7 @@ import { faTree } from "@fortawesome/free-solid-svg-icons";
 import { TimeController } from "../TimeController";
 import FocusedTimeDistribution from "../FocusedTimeDistribution/FocusedTimeDistribution";
 import TagDistribution from "../TagDistribution/TagDistribution";
+import Cookies from "universal-cookie";
 
 const cx = classNames.bind(styles);
 
@@ -41,12 +42,17 @@ function ForestBody() {
   const [tagsFrequency, setTagsFrequency] = useState({});
 
   useEffect(() => {
-    const stringTime = `${currentYear}-${currentMonth}-${currentDay}`;
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+
     const fetchPlatings = async () => {
       try {
         const response = await request.get("/planting/get-by-day", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           params: {
-            date: stringTime,
+            date: currentDate,
           },
         });
 
@@ -60,8 +66,11 @@ function ForestBody() {
 
       try {
         const response = await request.get("/planting/get-by-hours", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           params: {
-            date: stringTime,
+            date: currentDate,
           },
         });
 

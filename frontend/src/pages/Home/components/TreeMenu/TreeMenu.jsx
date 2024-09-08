@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import styles from "./TreeMenu.module.scss";
 import { request } from "../../../../api/request";
+import Cookies from "universal-cookie";
+
 const cx = classNames.bind(styles);
 
 function TreeMenu({ setShowTreeMenu, setCurrentTreeId }) {
@@ -14,7 +16,14 @@ function TreeMenu({ setShowTreeMenu, setCurrentTreeId }) {
   useEffect(() => {
     const fetchTrees = async () => {
       try {
-        const response = await request.get("/trees/my-tree");
+        const cookies = new Cookies();
+        const token = cookies.get("token");
+
+        const response = await request.get("/trees/my-tree", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.status === 200) {
           setTreeIds(response.data.data.map((item) => item.treeId));
