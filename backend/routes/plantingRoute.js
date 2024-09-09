@@ -42,4 +42,135 @@ router.post("/complete", async (req, res) => {
   }
 });
 
+router.get("/get-all", async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+
+    const plantings = await Planting.find({ userId: userInfo._id });
+    res.status(200).json(plantings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Router for getting by hours
+router.get("/get-by-hours", async (req, res) => {
+  try {
+    const { date } = req.query;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!date || !token) {
+      return res
+        .status(400)
+        .json({ message: "Date and authorization token are required" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const adjustedDate = new Date(date);
+    let hourlyPlantings = new Array(24).fill(0);
+
+    for (let i = 0; i < 24; i++) {
+      // Calculate the start and end times in milliseconds for the current hour
+      const start = new Date(adjustedDate).getTime() + i * 60 * 60 * 1000; // Adds i hours in ms
+      const end = start + 60 * 60 * 1000; // Adds 1 hour in ms
+
+      // Convert start and end back to Date objects for the query
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
+      const localHour = new Date(startDate).getHours();
+
+      // Fetch plantings that start within the current hour interval
+      const plantings = await Planting.find({
+        userId: userInfo._id,
+        start: { $gte: startDate, $lt: endDate },
+      });
+
+      if (plantings.length > 0) {
+        const totalSeconds = plantings.reduce((acc, planting) => {
+          return (
+            acc +
+            Math.floor(
+              (new Date(planting.end) - new Date(planting.start)) / 1000
+            )
+          );
+        }, 0);
+
+        // Store total planting time for the current hour
+        hourlyPlantings[localHour] = totalSeconds;
+      }
+    }
+
+    res.status(200).json(hourlyPlantings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Router for getting by day
+router.get("/get-by-day", async (req, res) => {
+  try {
+    const { date } = req.query; // Changed from req.body to req.query
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!date || !token) {
+      return res
+        .status(400)
+        .json({ message: "Date and authorization token are required" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+
+    // Create start and end date for the given date
+    const startDate = new Date(date);
+    startDate.setUTCHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setUTCHours(23, 59, 59, 999);
+
+    const plantings = await Planting.find({
+      userId: userInfo._id,
+      start: { $gte: startDate, $lte: endDate },
+    });
+
+    res.status(200).json({
+      count: plantings.length,
+      data: plantings,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Router for getting by week
+
+// Router for getting by month
+
+// Router for getting by year
+
 export default router;

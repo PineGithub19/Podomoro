@@ -24,6 +24,10 @@ const treeSchema = new mongoose.Schema(
 
 const myTreeSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+    },
     treeId: {
       type: String,
       required: true,

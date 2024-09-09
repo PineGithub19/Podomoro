@@ -1,6 +1,8 @@
 import express from "express";
 import { Tree } from "../models/treeModel.js";
 import { MyTree } from "../models/treeModel.js";
+import { UserAccount } from "../models/userAccountModel.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -34,11 +36,27 @@ router.get("/", async (req, res) => {
 // Route for Save a new MyTree
 router.post("/my-tree", async (req, res) => {
   try {
-    if (!req.body.treeId || !req.body.buy || !req.body.selected) {
+    if (
+      !req.body.token ||
+      !req.body.treeId ||
+      !req.body.buy ||
+      !req.body.selected
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
+    const userObj = jwt.verify(req.body.token, process.env.ACCESS_TOKEN_SECRET);
 
-    const newMyTree = await MyTree.create(req.body);
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const newMyTree = await MyTree.create({
+      userId: userInfo._id,
+      treeId: req.body.treeId,
+      buy: req.body.buy,
+      selected: req.body.selected,
+    });
     res.status(201).json(newMyTree);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -46,9 +64,24 @@ router.post("/my-tree", async (req, res) => {
 });
 
 // Route for Get All MyTrees
-router.get("/my-tree", async (req, res) => {
+router.get("/my-tree/", async (req, res) => {
   try {
-    const myTrees = await MyTree.find({});
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+
+    const myTrees = await MyTree.find({ userId: userInfo._id });
     res.status(200).json({
       count: myTrees.length,
       data: myTrees,
