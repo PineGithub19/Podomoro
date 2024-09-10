@@ -1,1 +1,1 @@
-export { TimeController } from "./TimeController";
+export { default } from "./TimeController";

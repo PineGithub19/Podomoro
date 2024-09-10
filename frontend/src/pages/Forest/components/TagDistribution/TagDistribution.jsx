@@ -12,8 +12,22 @@ const PLANT_STATUS = ["Study", "Rest", "Entertainment", "Other"]; // 0 -> 3
 
 function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
   const [totalTagsFrequency, setTotalTagsFrequency] = useState(0);
+  const [sortedTagsFrequency, setSortedTagsFrequency] = useState({});
 
   useEffect(() => {
+    const sortedObject = PLANT_STATUS.reduce((acc, currentKey) => {
+      if (Object.prototype.hasOwnProperty.call(tagsFrequency, currentKey)) {
+        acc[currentKey] = tagsFrequency[currentKey];
+      } else {
+        acc[currentKey] = 0;
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(sortedObject).length > 0) {
+      setSortedTagsFrequency(sortedObject);
+    }
+
     setTotalTagsFrequency(
       Object.values(tagsFrequency).reduce((acc, curr) => acc + curr, 0)
     );
@@ -23,18 +37,20 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
     <div className={cx("tag_distribution")}>
       <p className={cx("tag_distribution_title")}>Tag Distribution</p>
       <div className={cx("tag_distribution_chart")}>
-        <Doughnut
-          data={{
-            labels: ["Study", "Rest", "Entertainment", "Other"],
-            datasets: [
-              {
-                label: Object.keys(tagsFrequency),
-                data: Object.values(tagsFrequency),
-                backgroundColor: ["#00ffff", "#87ceeb", "#98fb98", "#ff5733"],
-              },
-            ],
-          }}
-        />
+        {Object.keys(sortedTagsFrequency).length > 0 && (
+          <Doughnut
+            data={{
+              labels: ["Study", "Rest", "Entertainment", "Other"],
+              datasets: [
+                {
+                  label: Object.keys(sortedTagsFrequency),
+                  data: Object.values(sortedTagsFrequency),
+                  backgroundColor: ["#00ffff", "#87ceeb", "#98fb98", "#ff5733"],
+                },
+              ],
+            }}
+          />
+        )}
       </div>
       <div className={cx("tag_distribution_categories")}>
         {PLANT_STATUS.map((item, index) => (
@@ -52,11 +68,14 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
             </div>
             <div className={cx("tag_distribution_statistic")}>
               <p className={cx("tag_distribution_statistic_percentage")}>
-                {((tagsFrequency[item] / totalTagsFrequency) * 100).toFixed(2)}{" "}
+                {(
+                  (sortedTagsFrequency[item] / totalTagsFrequency) *
+                  100
+                ).toFixed(2)}{" "}
                 %
               </p>
               <p className={cx("tag_distribution_statistic_value")}>
-                {tagMinutesCounts[item]} M
+                {tagMinutesCounts[item] ? tagMinutesCounts[item] : 0} M
               </p>
             </div>
           </div>

@@ -129,7 +129,7 @@ router.get("/get-by-hours", async (req, res) => {
 // Router for getting by day
 router.get("/get-by-day", async (req, res) => {
   try {
-    const { date } = req.query; // Changed from req.body to req.query
+    const { date, getDataset } = req.query; // Changed from req.body to req.query
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -168,6 +168,59 @@ router.get("/get-by-day", async (req, res) => {
 });
 
 // Router for getting by week
+router.get("/get-by-week", async (req, res) => {
+  try {
+    const { dates } = req.query;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!dates || !token) {
+      return res
+        .status(400)
+        .json({ message: "Date and authorization token are required" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const weekData = [];
+
+    for (let i = 0; i < 7; i++) {
+      const date = dates[i];
+      const startDate = new Date(date);
+      startDate.setUTCHours(0, 0, 0, 0);
+
+      const endDate = new Date(date);
+      endDate.setUTCHours(23, 59, 59, 999);
+
+      const plantings = await Planting.find({
+        userId: userInfo._id,
+        start: { $gte: startDate, $lte: endDate },
+      });
+
+      const totalSeconds = plantings.reduce((acc, planting) => {
+        return (
+          acc +
+          Math.floor((new Date(planting.end) - new Date(planting.start)) / 1000)
+        );
+      }, 0);
+
+      weekData.push({
+        date: startDate.getDay(), // 0 -> 6: Sun -> Sat
+        totalSeconds: totalSeconds,
+        count: plantings.length,
+        data: plantings,
+      });
+    }
+
+    res.status(200).json(weekData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Router for getting by month
 

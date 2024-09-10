@@ -6,7 +6,7 @@ import { request } from "../../../../api/request";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTree } from "@fortawesome/free-solid-svg-icons";
 
-import { TimeController } from "../TimeController";
+import TimeController from "../TimeController";
 import FocusedTimeDistribution from "../FocusedTimeDistribution/FocusedTimeDistribution";
 import TagDistribution from "../TagDistribution/TagDistribution";
 import Cookies from "universal-cookie";
@@ -29,6 +29,13 @@ function ForestBody() {
     currentDate.getDate().toString().padStart(2, "0")
   );
 
+  /** WEEK */
+  const [weekRange, setWeekRange] = useState([]);
+
+  /** MONTH */
+
+  /** YEAR */
+
   const handleChangeDate = (index) => {
     setActiveDate(index);
   };
@@ -38,21 +45,22 @@ function ForestBody() {
   const [aliveTrees, setAliveTrees] = useState(0);
 
   // For charts
-  const [hourlyPlantings, setHourlyPlantings] = useState([]);
+  const [datasetPlatings, setDatasetPlatings] = useState([]);
   const [tagsFrequency, setTagsFrequency] = useState({});
 
   useEffect(() => {
     const cookies = new Cookies();
     const token = cookies.get("token");
+    const dateString = `${currentYear}-${currentMonth}-${currentDay}`;
 
-    const fetchPlatings = async () => {
+    const fetchPlatingsByDay = async () => {
       try {
         const response = await request.get("/planting/get-by-day", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            date: currentDate,
+            date: dateString,
           },
         });
 
@@ -70,20 +78,54 @@ function ForestBody() {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            date: currentDate,
+            date: dateString,
           },
         });
 
         if (response.status === 200) {
-          setHourlyPlantings(response.data);
+          setDatasetPlatings(response.data);
         }
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchPlatings();
-  }, [currentYear, currentMonth, currentDay]);
+    const fetchPlatingsByWeek = async () => {
+      // const
+
+      try {
+        const response = await request.get("/planting/get-by-week", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            dates: weekRange,
+          },
+        });
+        if (response.status === 200) {
+          const result = response.data;
+
+          setPlantings(result.flatMap((item) => item.data));
+          setTotalCountPlanting(
+            result.reduce((acc, curr) => acc + curr.count, 0)
+          );
+          setDatasetPlatings(result.map((item) => item.totalSeconds));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (activeDate === 0) {
+      fetchPlatingsByDay();
+    } else if (activeDate === 1) {
+      fetchPlatingsByWeek();
+    }
+  }, [currentYear, currentMonth, currentDay, activeDate, weekRange]);
+
+  // useEffect(() => {
+  //   console.log(weekRange);
+  // }, [weekRange]);
 
   /** Statistic */
   const [treePlantingCounts, setTreePlantingCounts] = useState({});
@@ -142,7 +184,9 @@ function ForestBody() {
       setTreeFrequencyVisualization(treesResponse.map((tree) => tree.data));
     };
 
-    fetchTrees();
+    if (Object.keys(treePlantingCounts).length > 0) {
+      fetchTrees();
+    }
   }, [treePlantingCounts]);
 
   /** Get favorite trees by order */
@@ -170,10 +214,6 @@ function ForestBody() {
     }
   }, [treePlantingCounts, treeFrequencyVisualization]);
 
-  // useEffect(() => {
-  //   console.log(favoriteTrees);
-  // }, [favoriteTrees]);
-
   return (
     <div className={cx("wrapper")}>
       <div className={cx("time_distribution")}>
@@ -193,6 +233,9 @@ function ForestBody() {
             onChangeYear={setCurrentYear}
             onChangeMonth={setCurrentMonth}
             onChangeDate={setCurrentDay}
+            activeDate={activeDate}
+            weekRange={weekRange}
+            setWeekRange={setWeekRange}
           />
           <div className={cx("view_trees_container")}>
             {treeFrequencyVisualization.map((item) => (
@@ -238,7 +281,7 @@ function ForestBody() {
             </div>
           </div>
         </div>
-        <FocusedTimeDistribution data={hourlyPlantings} />
+        <FocusedTimeDistribution data={datasetPlatings} type={activeDate} />
       </div>
       <TagDistribution
         tagsFrequency={tagsFrequency}

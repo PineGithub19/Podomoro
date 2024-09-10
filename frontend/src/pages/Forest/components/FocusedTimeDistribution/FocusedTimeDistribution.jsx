@@ -9,14 +9,26 @@ import { Bar } from "react-chartjs-2";
 
 const cx = classNames.bind(styles);
 
-function FocusedTimeDistribution({ data }) {
+function FocusedTimeDistribution({ data, type = 0 }) {
   const [labels, setLabels] = useState([]);
   const [totalFocusedTime, setTotalFocusedTime] = useState(0);
 
   useEffect(() => {
-    setLabels(data.map((_, index) => index));
+    if (type === 0) {
+      setLabels(data.map((_, index) => index));
+    } else if (type === 1) {
+      setLabels([
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ]);
+    }
     setTotalFocusedTime(data.reduce((acc, curr) => acc + curr, 0));
-  }, [data]);
+  }, [data, type]);
 
   return (
     <div className={cx("time_distribution_chart")}>
@@ -52,6 +64,7 @@ function FocusedTimeDistribution({ data }) {
 
 FocusedTimeDistribution.propTypes = {
   data: PropTypes.array,
+  type: PropTypes.number,
 };
 
 export default FocusedTimeDistribution;
