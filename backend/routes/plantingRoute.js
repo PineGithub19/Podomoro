@@ -107,12 +107,7 @@ router.get("/get-by-hours", async (req, res) => {
 
       if (plantings.length > 0) {
         const totalSeconds = plantings.reduce((acc, planting) => {
-          return (
-            acc +
-            Math.floor(
-              (new Date(planting.end) - new Date(planting.start)) / 1000
-            )
-          );
+          return acc + planting.duration;
         }, 0);
 
         // Store total planting time for the current hour
@@ -129,7 +124,7 @@ router.get("/get-by-hours", async (req, res) => {
 // Router for getting by day
 router.get("/get-by-day", async (req, res) => {
   try {
-    const { date, getDataset } = req.query; // Changed from req.body to req.query
+    const { date } = req.query; // Changed from req.body to req.query
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -170,7 +165,7 @@ router.get("/get-by-day", async (req, res) => {
 // Router for getting by week
 router.get("/get-by-week", async (req, res) => {
   try {
-    const { dates } = req.query;
+    const { dates } = req.query; // List of days in a week ['2024-09-07',...,'2024-09-14']
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!dates || !token) {
@@ -202,10 +197,7 @@ router.get("/get-by-week", async (req, res) => {
       });
 
       const totalSeconds = plantings.reduce((acc, planting) => {
-        return (
-          acc +
-          Math.floor((new Date(planting.end) - new Date(planting.start)) / 1000)
-        );
+        return acc + planting.duration;
       }, 0);
 
       weekData.push({
@@ -223,6 +215,66 @@ router.get("/get-by-week", async (req, res) => {
 });
 
 // Router for getting by month
+router.get("/get-by-month", async (req, res) => {
+  try {
+    const { date } = req.query; // A specific month + year - Ex: 2024-09
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!date || !token) {
+      return res
+        .status(400)
+        .json({ message: "Date and authorization token are required" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const monthData = [];
+    const adjustedDate = new Date(date);
+    const numberOfDays = new Date(
+      adjustedDate.getFullYear(),
+      adjustedDate.getMonth() + 1,
+      0
+    ).getDate();
+
+    for (let i = 1; i <= numberOfDays; i++) {
+      // https://www.geeksforgeeks.org/how-to-get-the-first-and-last-date-of-current-month-using-javascript/
+      // https://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
+      const st = new Date(
+        Date.UTC(adjustedDate.getFullYear(), adjustedDate.getMonth(), i)
+      );
+
+      const startDate = new Date(st);
+
+      const endDate = new Date(st);
+      endDate.setUTCHours(23, 59, 59, 999);
+
+      const plantings = await Planting.find({
+        userId: userInfo._id,
+        start: { $gte: startDate, $lt: endDate },
+      });
+
+      const totalSeconds = plantings.reduce(
+        (acc, curr) => acc + curr.duration,
+        0
+      );
+
+      monthData.push({
+        date: i,
+        totalSeconds: totalSeconds,
+        count: plantings.length,
+        data: plantings,
+      });
+    }
+    res.status(200).json(monthData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Router for getting by year
 

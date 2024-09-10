@@ -27,7 +27,6 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
     if (Object.keys(sortedObject).length > 0) {
       setSortedTagsFrequency(sortedObject);
     }
-
     setTotalTagsFrequency(
       Object.values(tagsFrequency).reduce((acc, curr) => acc + curr, 0)
     );

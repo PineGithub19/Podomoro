@@ -1,1 +1,5 @@
-export { default } from "./TimeController";
+export {
+  ByDateController,
+  ByWeekController,
+  ByMonthController,
+} from "./TimeController";

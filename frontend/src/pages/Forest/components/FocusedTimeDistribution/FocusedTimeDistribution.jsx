@@ -9,14 +9,17 @@ import { Bar } from "react-chartjs-2";
 
 const cx = classNames.bind(styles);
 
-function FocusedTimeDistribution({ data, type = 0 }) {
+function FocusedTimeDistribution({ data, activeDate = 0 }) {
   const [labels, setLabels] = useState([]);
   const [totalFocusedTime, setTotalFocusedTime] = useState(0);
+  const [dataVisualization, setDataVisualization] = useState(data);
 
   useEffect(() => {
-    if (type === 0) {
+    if (activeDate === 0) {
       setLabels(data.map((_, index) => index));
-    } else if (type === 1) {
+      setDataVisualization(data);
+      setTotalFocusedTime(data.reduce((acc, curr) => acc + curr, 0));
+    } else if (activeDate === 1) {
       setLabels([
         "Sunday",
         "Monday",
@@ -26,9 +29,16 @@ function FocusedTimeDistribution({ data, type = 0 }) {
         "Friday",
         "Saturday",
       ]);
+      setDataVisualization(data);
+      setTotalFocusedTime(data.reduce((acc, curr) => acc + curr, 0));
+    } else if (activeDate === 2) {
+      setLabels(data.map((item) => item.date));
+      setDataVisualization(data.map((item) => item.totalSeconds));
+      setTotalFocusedTime(
+        data.reduce((acc, curr) => acc + curr.totalSeconds, 0)
+      );
     }
-    setTotalFocusedTime(data.reduce((acc, curr) => acc + curr, 0));
-  }, [data, type]);
+  }, [data, activeDate]);
 
   return (
     <div className={cx("time_distribution_chart")}>
@@ -50,7 +60,7 @@ function FocusedTimeDistribution({ data, type = 0 }) {
             datasets: [
               {
                 label: "Total focused time",
-                data: data,
+                data: dataVisualization,
                 borderRadius: 4,
                 backgroundColor: "#50aa8d",
               },
@@ -64,7 +74,7 @@ function FocusedTimeDistribution({ data, type = 0 }) {
 
 FocusedTimeDistribution.propTypes = {
   data: PropTypes.array,
-  type: PropTypes.number,
+  activeDate: PropTypes.number,
 };
 
 export default FocusedTimeDistribution;
