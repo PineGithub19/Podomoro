@@ -37,6 +37,12 @@ function FocusedTimeDistribution({ data, activeDate = 0 }) {
       setTotalFocusedTime(
         data.reduce((acc, curr) => acc + curr.totalSeconds, 0)
       );
+    } else if (activeDate === 3) {
+      setLabels(data.map((item) => item.date));
+      setDataVisualization(data.map((item) => item.totalSeconds));
+      setTotalFocusedTime(
+        data.reduce((acc, curr) => acc + curr.totalSeconds, 0)
+      );
     }
   }, [data, activeDate]);
 

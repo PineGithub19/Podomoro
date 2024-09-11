@@ -10,6 +10,7 @@ import {
   ByDateController,
   ByWeekController,
   ByMonthController,
+  ByYearController,
 } from "../TimeController";
 import FocusedTimeDistribution from "../FocusedTimeDistribution/FocusedTimeDistribution";
 import TagDistribution from "../TagDistribution/TagDistribution";
@@ -35,10 +36,6 @@ function ForestBody() {
 
   /** WEEK */
   const [weekRange, setWeekRange] = useState([]);
-
-  /** MONTH */
-
-  /** YEAR */
 
   const handleChangeDate = (index) => {
     setActiveDate(index);
@@ -150,18 +147,48 @@ function ForestBody() {
       }
     };
 
+    const fetchPlatingByYear = async () => {
+      const yearString = currentYear.toString();
+
+      try {
+        const response = await request.get("/planting/get-by-year", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            date: yearString,
+          },
+        });
+
+        if (response.status === 200) {
+          const result = response.data;
+
+          setPlantings(result.flatMap((item) => item.data));
+          setTotalCountPlanting(
+            result.reduce((acc, curr) => acc + curr.count, 0)
+          );
+          setDatasetPlatings(
+            result.map((item) => ({
+              date: item.month,
+              totalSeconds: item.totalSeconds,
+            }))
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     if (activeDate === 0) {
       fetchPlatingsByDay();
     } else if (activeDate === 1) {
       fetchPlatingsByWeek();
     } else if (activeDate === 2) {
       fetchPlatingByMonth();
+    } else if (activeDate === 3) {
+      fetchPlatingByYear();
     }
   }, [currentYear, currentMonth, currentDay, activeDate, weekRange]);
-
-  // useEffect(() => {
-  //   console.log(weekRange);
-  // }, [weekRange]);
 
   /** Statistic */
   const [treePlantingCounts, setTreePlantingCounts] = useState({});
@@ -280,6 +307,13 @@ function ForestBody() {
           )}
           {activeDate === 2 && (
             <ByMonthController
+              onChangeYear={setCurrentYear}
+              onChangeMonth={setCurrentMonth}
+              onChangeDate={setCurrentDay}
+            />
+          )}
+          {activeDate === 3 && (
+            <ByYearController
               onChangeYear={setCurrentYear}
               onChangeMonth={setCurrentMonth}
               onChangeDate={setCurrentDay}

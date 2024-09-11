@@ -217,7 +217,7 @@ router.get("/get-by-week", async (req, res) => {
 // Router for getting by month
 router.get("/get-by-month", async (req, res) => {
   try {
-    const { date } = req.query; // A specific month + year - Ex: 2024-09
+    const { date } = req.query; // A specific month + year - Ex: "2024-09"
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -247,9 +247,7 @@ router.get("/get-by-month", async (req, res) => {
       const st = new Date(
         Date.UTC(adjustedDate.getFullYear(), adjustedDate.getMonth(), i)
       );
-
       const startDate = new Date(st);
-
       const endDate = new Date(st);
       endDate.setUTCHours(23, 59, 59, 999);
 
@@ -277,5 +275,54 @@ router.get("/get-by-month", async (req, res) => {
 });
 
 // Router for getting by year
+router.get("/get-by-year", async (req, res) => {
+  try {
+    const { date } = req.query; // A specific year - Ex: "2024"
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!date || !token) {
+      return res
+        .status(400)
+        .json({ message: "Date and authorization token are required" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const yearData = [];
+    const adjustedYear = new Date(date);
+
+    for (let i = 0; i <= 11; i++) {
+      const st = new Date(Date.UTC(adjustedYear.getFullYear(), i)); // get the specific month (0 -> 11 === Jan -> Dec)
+      const startDate = new Date(st);
+      const endDate = new Date(st.getFullYear(), i + 1, 0);
+      endDate.setUTCHours(23, 59, 59, 999);
+
+      const plantings = await Planting.find({
+        userId: userInfo._id,
+        start: { $gte: startDate, $lt: endDate },
+      });
+
+      const totalSeconds = plantings.reduce(
+        (acc, curr) => acc + curr.duration,
+        0
+      );
+
+      yearData.push({
+        month: i + 1,
+        totalSeconds: totalSeconds,
+        count: plantings.length,
+        data: plantings,
+      });
+    }
+    res.status(200).json(yearData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 export default router;

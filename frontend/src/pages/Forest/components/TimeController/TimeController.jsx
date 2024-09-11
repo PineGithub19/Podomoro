@@ -352,12 +352,12 @@ export function ByWeekController({ weekRange, setWeekRange }) {
     const firstDayOfWeek = getDateFromString(weekRange[0]);
 
     if (type === "previous") {
-      setPreviousWeek((prev) => prev - 1);
+      setPreviousWeek((prev) => prev + 1);
 
       // Move to the previous week (subtract 7 days)
       firstDayOfWeek.setDate(firstDayOfWeek.getDate() - 7);
     } else if (type === "next") {
-      setPreviousWeek((prev) => prev + 1);
+      setPreviousWeek((prev) => prev - 1);
 
       // Move to the next week (add 7 days)
       firstDayOfWeek.setDate(firstDayOfWeek.getDate() + 7);
@@ -414,7 +414,7 @@ export function ByWeekController({ weekRange, setWeekRange }) {
         onClick={() => handleChangeDate("previous")}
       />
       {<p className={cx("date_controller_text")}>{weekRangeVisualization}</p>}
-      {previousWeek !== 0 || (
+      {previousWeek !== 0 && (
         <FontAwesomeIcon
           icon={faChevronRight}
           className={cx("date_controller_icon_previous")}
@@ -501,6 +501,74 @@ export function ByMonthController({
 }
 
 ByMonthController.propTypes = {
+  onChangeDate: PropTypes.func,
+  onChangeMonth: PropTypes.func,
+  onChangeYear: PropTypes.func,
+};
+
+export function ByYearController({
+  onChangeDate,
+  onChangeMonth,
+  onChangeYear,
+}) {
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(
+    (currentDate.getMonth() + 1).toString().padStart(2, "0")
+  );
+  const [currentDay, setCurrentDay] = useState(
+    currentDate.getDate().toString().padStart(2, "0")
+  );
+
+  /** GET BY YEAR */
+  const [yearVisualization, setYearVisualization] = useState(""); // Ex: "2024"
+  const [previousYear, setPreviousYear] = useState(0);
+
+  const handleChangeDate = (type) => {
+    let day = parseInt(currentDay, 10);
+    let month = parseInt(currentMonth, 10);
+    let year = currentYear;
+
+    if (type === "previous") {
+      setPreviousYear((prev) => prev + 1);
+      year -= 1;
+    } else if (type === "next") {
+      setPreviousYear((prev) => prev - 1);
+      year += 1;
+    }
+
+    setCurrentYear(year);
+    setCurrentMonth(month.toString().padStart(2, "0"));
+    setCurrentDay(day.toString().padStart(2, "0"));
+    onChangeYear(year);
+    onChangeMonth(month.toString().padStart(2, "0"));
+    onChangeDate(day.toString().padStart(2, "0"));
+  };
+
+  useEffect(() => {
+    /** YEAR */
+    setYearVisualization(`${currentYear}`);
+  }, [currentDay, currentMonth, currentYear]);
+
+  return (
+    <div className={cx("date_controller")}>
+      <FontAwesomeIcon
+        icon={faChevronLeft}
+        className={cx("date_controller_icon_next")}
+        onClick={() => handleChangeDate("previous")}
+      />
+      {<p className={cx("date_controller_text")}>{yearVisualization}</p>}
+      {previousYear !== 0 && (
+        <FontAwesomeIcon
+          icon={faChevronRight}
+          className={cx("date_controller_icon_previous")}
+          onClick={() => handleChangeDate("next")}
+        />
+      )}
+    </div>
+  );
+}
+
+ByYearController.propTypes = {
   onChangeDate: PropTypes.func,
   onChangeMonth: PropTypes.func,
   onChangeYear: PropTypes.func,
