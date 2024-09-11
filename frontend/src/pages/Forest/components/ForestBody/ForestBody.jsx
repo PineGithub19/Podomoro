@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import classNames from "classnames/bind";
 import styles from "./ForestBody.module.scss";
 import { request } from "../../../../api/request";
+import { CurrentStatuesContext } from "../../Forest";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTree } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +25,7 @@ const currentDate = new Date();
 function ForestBody() {
   const [activeDate, setActiveDate] = useState(0);
   const [plantings, setPlantings] = useState([]);
+  const currentStatues = useContext(CurrentStatuesContext);
 
   /** TimeZone */
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
@@ -62,6 +64,7 @@ function ForestBody() {
           },
           params: {
             date: dateString,
+            tags: currentStatues,
           },
         });
 
@@ -80,6 +83,7 @@ function ForestBody() {
           },
           params: {
             date: dateString,
+            tags: currentStatues,
           },
         });
 
@@ -99,6 +103,7 @@ function ForestBody() {
           },
           params: {
             dates: weekRange,
+            tags: currentStatues,
           },
         });
         if (response.status === 200) {
@@ -125,6 +130,7 @@ function ForestBody() {
           },
           params: {
             date: monthString,
+            tags: currentStatues,
           },
         });
 
@@ -157,6 +163,7 @@ function ForestBody() {
           },
           params: {
             date: yearString,
+            tags: currentStatues,
           },
         });
 
@@ -188,7 +195,14 @@ function ForestBody() {
     } else if (activeDate === 3) {
       fetchPlatingByYear();
     }
-  }, [currentYear, currentMonth, currentDay, activeDate, weekRange]);
+  }, [
+    currentYear,
+    currentMonth,
+    currentDay,
+    activeDate,
+    weekRange,
+    currentStatues,
+  ]);
 
   /** Statistic */
   const [treePlantingCounts, setTreePlantingCounts] = useState({});

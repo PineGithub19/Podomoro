@@ -69,7 +69,7 @@ router.get("/get-all", async (req, res) => {
 // Router for getting by hours
 router.get("/get-by-hours", async (req, res) => {
   try {
-    const { date } = req.query;
+    const { date, tags } = req.query;
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -103,6 +103,7 @@ router.get("/get-by-hours", async (req, res) => {
       const plantings = await Planting.find({
         userId: userInfo._id,
         start: { $gte: startDate, $lt: endDate },
+        tag: { $in: tags },
       });
 
       if (plantings.length > 0) {
@@ -124,7 +125,7 @@ router.get("/get-by-hours", async (req, res) => {
 // Router for getting by day
 router.get("/get-by-day", async (req, res) => {
   try {
-    const { date } = req.query; // Changed from req.body to req.query
+    const { date, tags } = req.query; // Changed from req.body to req.query
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -151,6 +152,7 @@ router.get("/get-by-day", async (req, res) => {
     const plantings = await Planting.find({
       userId: userInfo._id,
       start: { $gte: startDate, $lte: endDate },
+      tag: { $in: tags },
     });
 
     res.status(200).json({
@@ -165,7 +167,7 @@ router.get("/get-by-day", async (req, res) => {
 // Router for getting by week
 router.get("/get-by-week", async (req, res) => {
   try {
-    const { dates } = req.query; // List of days in a week ['2024-09-07',...,'2024-09-14']
+    const { dates, tags } = req.query; // List of days in a week ['2024-09-07',...,'2024-09-14']
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!dates || !token) {
@@ -194,6 +196,7 @@ router.get("/get-by-week", async (req, res) => {
       const plantings = await Planting.find({
         userId: userInfo._id,
         start: { $gte: startDate, $lte: endDate },
+        tag: { $in: tags },
       });
 
       const totalSeconds = plantings.reduce((acc, planting) => {
@@ -217,7 +220,7 @@ router.get("/get-by-week", async (req, res) => {
 // Router for getting by month
 router.get("/get-by-month", async (req, res) => {
   try {
-    const { date } = req.query; // A specific month + year - Ex: "2024-09"
+    const { date, tags } = req.query; // A specific month + year - Ex: "2024-09"
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -254,6 +257,7 @@ router.get("/get-by-month", async (req, res) => {
       const plantings = await Planting.find({
         userId: userInfo._id,
         start: { $gte: startDate, $lt: endDate },
+        tag: { $in: tags },
       });
 
       const totalSeconds = plantings.reduce(
@@ -277,7 +281,7 @@ router.get("/get-by-month", async (req, res) => {
 // Router for getting by year
 router.get("/get-by-year", async (req, res) => {
   try {
-    const { date } = req.query; // A specific year - Ex: "2024"
+    const { date, tags } = req.query; // A specific year - Ex: "2024"
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!date || !token) {
@@ -305,6 +309,7 @@ router.get("/get-by-year", async (req, res) => {
       const plantings = await Planting.find({
         userId: userInfo._id,
         start: { $gte: startDate, $lt: endDate },
+        tag: { $in: tags },
       });
 
       const totalSeconds = plantings.reduce(

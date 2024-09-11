@@ -7,6 +7,7 @@ import cors from "cors";
 import treeRoute from "./routes/treeRoute.js";
 import authRoute from "./routes/authRoute.js";
 import plantingRoute from "./routes/plantingRoute.js";
+import tagRoute from "./routes/tagRoute.js";
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,8 @@ app.use("/auth", authRoute);
 app.use("/trees", treeRoute);
 
 app.use("/planting", plantingRoute);
+
+app.use("/tag", tagRoute);
 
 mongoose
   .connect(mongoDBURL)

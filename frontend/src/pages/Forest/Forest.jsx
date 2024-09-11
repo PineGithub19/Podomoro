@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import classNames from "classnames/bind";
 import styles from "./Forest.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,9 +9,17 @@ import OverviewPopup from "./components/OverviewPopup";
 
 const cx = classNames.bind(styles);
 
+export const CurrentStatuesContext = createContext();
+
 function Forest() {
   const [isActiveSideBar, setIsActiveSideBar] = useState(false);
   const [isOverviewPopup, setIsOverviewPopup] = useState(false);
+  const [statues, setStatues] = useState([
+    "Study",
+    "Rest",
+    "Entertainment",
+    "Other",
+  ]);
 
   const handleIsActiveSideBar = () => {
     setIsActiveSideBar(!isActiveSideBar);
@@ -47,11 +55,17 @@ function Forest() {
           </div>
         </div>
         <div className={cx("body")}>
-          <ForestBody />
+          <CurrentStatuesContext.Provider value={statues}>
+            <ForestBody />
+          </CurrentStatuesContext.Provider>
         </div>
       </div>
       {isOverviewPopup && (
-        <OverviewPopup setIsOverviewPopup={setIsOverviewPopup} />
+        <OverviewPopup
+          setIsOverviewPopup={setIsOverviewPopup}
+          currentStatues={statues}
+          handleChangeCurrentStatuses={setStatues}
+        />
       )}
     </>
   );
