@@ -1,0 +1,150 @@
+:root {
+  --width-tree-item: 800px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  max-height: 100%;
+}
+
+.header {
+  width: 100%;
+  background-color: var(--primary-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header_container {
+  width: var(--primary-width);
+  height: var(--primary-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+}
+
+.header_title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 2.4rem;
+  color: var(--white-color);
+}
+
+.header_menu_icon {
+  font-size: 2.4rem;
+  color: var(--white-color);
+  cursor: pointer;
+}
+
+.coins {
+  display: flex;
+  align-items: center;
+  background-color: rgba($color: #000000, $alpha: 0.25);
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+
+.header_coin_icon {
+  color: var(--coin-color);
+  font-size: 3rem;
+}
+
+.coin_count {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--white-color);
+  margin-left: 16px;
+}
+
+.body {
+  margin-top: 64px;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tree Item */
+.trees_container {
+  width: var(--width-tree-item);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  margin-bottom: 64px;
+}
+
+.tree_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 16px;
+  border-radius: 10px;
+  background-color: var(--white-color);
+  box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.25);
+
+  cursor: pointer;
+}
+
+.image_container {
+  position: relative;
+  border-radius: 10px;
+  overflow: clip;
+
+  margin-bottom: 12px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 8px rgba($color: #000000, $alpha: 0.5);
+  }
+}
+
+.tree_item_image {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+
+  border-radius: 10px;
+  overflow: clip;
+}
+
+.tree_item_name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.price_text {
+  font-size: 1.8rem;
+  margin-right: 4px;
+}
+
+.price_coin_icon {
+  font-size: 1.8rem;
+  color: var(--yellow-bold-color);
+}
+
+.unlocked {
+  color: #808080;
+  font-size: 1.8rem;
+}

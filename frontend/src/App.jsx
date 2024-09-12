@@ -1,8 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Forest from "./pages/Forest/Forest";
-import LogIn from "./pages/LogIn/Login";
-import SignUp from "./pages/SignUp/SignUp";
+import Home from "./pages/Home";
+import Forest from "./pages/Forest";
+import LogIn from "./pages/LogIn";
+import SignUp from "./pages/SignUp";
+import Store from "./pages/Store";
 // import CreateTree from "./pages/CreateTree";
 // import ShowTree from "./pages/ShowTree";
 // import EditTree from "./pages/EditTree";
@@ -16,6 +17,7 @@ function App() {
       <Route path="/login" element={<LogIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/store" element={<Store />} />
       {/* <Route path="/trees/create" element={<CreateTree />} />
       <Route path="/trees/details/:id" element={<ShowTree />} />
       <Route path="/trees/edit/:id" element={<EditTree />} />

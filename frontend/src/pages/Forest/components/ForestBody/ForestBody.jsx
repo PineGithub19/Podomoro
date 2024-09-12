@@ -288,6 +288,8 @@ function ForestBody() {
       });
 
       setFavoriteTrees(sortedFavoriteTrees);
+    } else {
+      setTreeFrequencyVisualization([]);
     }
   }, [treePlantingCounts, treeFrequencyVisualization]);
 
@@ -334,32 +336,35 @@ function ForestBody() {
             />
           )}
           <div className={cx("view_trees_container")}>
-            {treeFrequencyVisualization.map((item) => (
-              <div className={cx("view_trees_item")} key={item._id}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className={cx("tree_avatar")}
-                />
-                <div className={cx("view_trees_item_info")}>
-                  <p className={cx("view_trees_item_name")}>{item.name}</p>
-                  <div className={cx("view_trees_item_progress_container")}>
-                    <div
-                      className={cx("view_trees_item_progress")}
-                      style={{
-                        "--progress-value": `${
-                          (treePlantingCounts[item._id] / totalCountPlanting) *
-                          100
-                        }%`,
-                      }}
-                    ></div>
-                    <p className={cx("view_trees_item_count")}>
-                      {treePlantingCounts[item._id]} times
-                    </p>
+            {treeFrequencyVisualization.length !== 0 &&
+              treeFrequencyVisualization.map((item) => (
+                <div className={cx("view_trees_item")} key={item._id}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className={cx("tree_avatar")}
+                  />
+                  <div className={cx("view_trees_item_info")}>
+                    <p className={cx("view_trees_item_name")}>{item.name}</p>
+                    <div className={cx("view_trees_item_progress_container")}>
+                      <div
+                        className={cx("view_trees_item_progress")}
+                        style={{
+                          "--progress-value": `${
+                            (treePlantingCounts[item._id] /
+                              totalCountPlanting) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+
+                      <p className={cx("view_trees_item_count")}>
+                        {treePlantingCounts[item._id]} times
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
           <div className={cx("view_trees_footer")}>
             <div className={cx("view_trees")}>
@@ -388,35 +393,37 @@ function ForestBody() {
       />
       <div className={cx("favorite_trees")}>
         <p className={cx("favorite_trees_title")}>Favorite Trees</p>
-        {favoriteTrees.map((item, index) => (
-          <div className={cx("favorite_trees_item")} key={item._id}>
-            <p className={cx("favorite_trees_item_order")}>{index + 1}.</p>
-            <img
-              src={item.image}
-              alt={item.name}
-              className={cx("favorite_trees_item_avatar")}
-            />
-            <div className={cx("favorite_trees_item_info")}>
-              <p className={cx("favorite_trees_item_name")}>{item.name}</p>
-              <div className={cx("favorite_trees_item_progress_container")}>
-                <div
-                  className={cx("favorite_trees_item_progress")}
-                  style={{
-                    "--progress-all-value": `${
-                      (treePlantingCounts[item._id] / totalCountPlanting) * 100
-                    }%`,
-                  }}
-                ></div>
-                <p className={cx("favorite_trees_item_count")}>
-                  {treePlantingCounts[item._id]
-                    ? treePlantingCounts[item._id]
-                    : 0}{" "}
-                  times
-                </p>
+        {favoriteTrees.length !== 0 &&
+          favoriteTrees.map((item, index) => (
+            <div className={cx("favorite_trees_item")} key={item._id}>
+              <p className={cx("favorite_trees_item_order")}>{index + 1}.</p>
+              <img
+                src={item.image}
+                alt={item.name}
+                className={cx("favorite_trees_item_avatar")}
+              />
+              <div className={cx("favorite_trees_item_info")}>
+                <p className={cx("favorite_trees_item_name")}>{item.name}</p>
+                <div className={cx("favorite_trees_item_progress_container")}>
+                  <div
+                    className={cx("favorite_trees_item_progress")}
+                    style={{
+                      "--progress-all-value": `${
+                        (treePlantingCounts[item._id] / totalCountPlanting) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                  <p className={cx("favorite_trees_item_count")}>
+                    {treePlantingCounts[item._id]
+                      ? treePlantingCounts[item._id]
+                      : 0}{" "}
+                    times
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

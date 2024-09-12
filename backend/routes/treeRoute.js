@@ -40,7 +40,8 @@ router.post("/my-tree", async (req, res) => {
       !req.body.token ||
       !req.body.treeId ||
       !req.body.buy ||
-      !req.body.selected
+      req.body.selected === undefined ||
+      req.body.selected === null
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
