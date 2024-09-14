@@ -1,15 +1,33 @@
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import styles from "./StorePopup.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { faCoins, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { request } from "../../../../api/request";
 import Cookies from "universal-cookie";
 
 const cx = classNames.bind(styles);
 
-function StorePopup({ handleActivePopup, isUnlocked, data }) {
+function StorePopup({
+  handleActivePopup,
+  isUnlocked,
+  coins,
+  handleCoins,
+  data,
+}) {
+  const [showMessage, setShowMessage] = useState(false);
+  const [validMessage, setValidMessage] = useState(false);
+  const [message, setMessage] = useState("");
+
   const handleBuyTree = async () => {
+    if (coins < data.price) {
+      setValidMessage(false);
+      setMessage("not enough money");
+      setShowMessage(true);
+      return;
+    }
+
     const cookies = new Cookies();
     const token = cookies.get("token");
     try {
@@ -20,13 +38,39 @@ function StorePopup({ handleActivePopup, isUnlocked, data }) {
         selected: false,
       });
 
-      if (response.status === 200) {
-        handleActivePopup(false);
+      if (response.status === 201) {
+        const totalCoins = coins - data.price;
+        const coinsResponse = await request.put("coin/my-coin", {
+          token: token,
+          coin: totalCoins,
+        });
+
+        if (coinsResponse.status === 200) {
+          handleCoins(totalCoins);
+          handleActivePopup(false);
+          setValidMessage(true);
+          setMessage("buy successfully");
+          setShowMessage(true);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  /** Message */
+
+  const handleCloseMessage = () => {
+    setShowMessage(false);
+  };
+
+  useEffect(() => {
+    if (showMessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
+  }, [showMessage]);
 
   return (
     <div className={cx("wrapper")} onClick={() => handleActivePopup(false)}>
@@ -45,13 +89,32 @@ function StorePopup({ handleActivePopup, isUnlocked, data }) {
           </div>
         )}
       </div>
+      {showMessage && (
+        <div className={cx("message")}>
+          <p
+            className={cx("message_text", {
+              success: validMessage,
+              error: !validMessage,
+            })}
+          >
+            {message}
+          </p>
+          <FontAwesomeIcon
+            icon={faXmark}
+            className={cx("message_close_icon")}
+            onClick={handleCloseMessage}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
 StorePopup.propTypes = {
   handleActivePopup: PropTypes.func,
-  isUnlocked: PropTypes.bool,
+  isUnlocked: PropTypes.object,
+  coins: PropTypes.number,
+  handleCoins: PropTypes.func,
   data: PropTypes.object,
 };
 

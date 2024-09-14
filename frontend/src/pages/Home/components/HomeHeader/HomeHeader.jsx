@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -11,12 +11,15 @@ import { faFire, faCoins } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames/bind";
 import styles from "./HomeHeader.module.scss";
 import SideBar from "../../../../components/SideBar";
+import { request } from "../../../../api/request";
+import Cookies from "universal-cookie";
 
 const cx = classNames.bind(styles);
 
 function HomeHeader({ isRunning }) {
   const [isMusicActive, setIsMusicActive] = useState(true);
   const [isSideBarActive, setIsSideBarActive] = useState(false);
+  const [coins, setMyCoins] = useState(Number(0));
 
   const handleIsMusicActive = () => {
     setIsMusicActive(!isMusicActive);
@@ -25,6 +28,37 @@ function HomeHeader({ isRunning }) {
   const handleIsSideBarActive = () => {
     setIsSideBarActive(!isSideBarActive);
   };
+
+  useEffect(() => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+
+    const fetchGetMyCoins = async () => {
+      try {
+        const response = await request.get("coin/my-coin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setMyCoins(response.data[0].coin);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchSetMyCoins = async () => {
+      await request.post("coin/my-coin", {
+        token: token,
+        coin: 0,
+      });
+    };
+
+    fetchGetMyCoins();
+    fetchSetMyCoins();
+  }, []);
 
   return (
     <>
@@ -48,7 +82,7 @@ function HomeHeader({ isRunning }) {
                 className={cx("header_coin_icon")}
                 icon={faCoins}
               />
-              <span className={cx("coin_count")}>0</span>
+              <span className={cx("coin_count")}>{coins}</span>
             </div>
           </div>
         </div>

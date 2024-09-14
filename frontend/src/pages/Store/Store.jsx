@@ -17,6 +17,8 @@ function Store() {
   const [trees, setTrees] = useState([]);
   const [treesVisualization, setTreesVisualization] = useState([]);
 
+  const [coins, setMyCoins] = useState(Number(0));
+
   const [activePopup, setActivePopup] = useState(false);
   const [isActivePopup, setIsActivePopup] = useState(null);
 
@@ -25,6 +27,9 @@ function Store() {
   };
 
   useEffect(() => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+
     const fetchAllTrees = async () => {
       try {
         const response = await request.get("/trees");
@@ -38,8 +43,6 @@ function Store() {
     };
 
     const fetchMyTrees = async () => {
-      const cookies = new Cookies();
-      const token = cookies.get("token");
       try {
         const response = await request.get("/trees/my-tree", {
           headers: {
@@ -55,9 +58,26 @@ function Store() {
       }
     };
 
+    const fetchCoins = async () => {
+      try {
+        const response = await request.get("/coin/my-coin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setMyCoins(response.data[0].coin);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchAllTrees();
     fetchMyTrees();
-  }, []);
+    fetchCoins();
+  }, [coins]);
 
   useEffect(() => {
     if (trees.length === 0 || myTrees.length === 0) {
@@ -100,7 +120,7 @@ function Store() {
                 className={cx("header_coin_icon")}
                 icon={faCoins}
               />
-              <span className={cx("coin_count")}>0</span>
+              <span className={cx("coin_count")}>{coins}</span>
             </div>
             {isSideBarActive && (
               <SideBar
@@ -114,7 +134,7 @@ function Store() {
           {treesVisualization.map((visualItems, visualIndex) => (
             <div className={cx("trees_container")} key={visualIndex}>
               {visualItems.map((item) => (
-                <>
+                <div key={item._id}>
                   <div
                     className={cx("tree_item")}
                     key={item._id}
@@ -149,10 +169,12 @@ function Store() {
                     <StorePopup
                       handleActivePopup={setActivePopup}
                       isUnlocked={checkUnlocked(item)}
+                      coins={coins}
+                      handleCoins={setMyCoins}
                       data={item}
                     />
                   )}
-                </>
+                </div>
               ))}
             </div>
           ))}

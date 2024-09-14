@@ -91,3 +91,64 @@
   color: #808080;
   font-size: 1.8rem;
 }
+
+/* Message */
+
+.message {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  background-color: var(--white-color);
+  border-radius: 10px;
+
+  min-width: 350px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 4px solid #aaa;
+
+  animation: showMessage 0.25s ease, fadeInMessage 0.5s ease;
+}
+
+.message_text {
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  margin-right: 12px;
+}
+
+.message_text.success {
+  color: #14ef10;
+}
+
+.message_text.error {
+  color: #ff4141;
+}
+
+.message_close_icon {
+  font-size: 1.6rem;
+  color: var(--black-color);
+
+  cursor: pointer;
+}
+
+@keyframes showMessage {
+  from {
+    top: -10px;
+  }
+  to {
+    top: 10px;
+  }
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
