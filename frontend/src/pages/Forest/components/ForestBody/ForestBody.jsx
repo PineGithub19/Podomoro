@@ -291,7 +291,8 @@ function ForestBody() {
     } else {
       setTreeFrequencyVisualization([]);
     }
-  }, [treePlantingCounts, treeFrequencyVisualization]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [treePlantingCounts]);
 
   return (
     <div className={cx("wrapper")}>

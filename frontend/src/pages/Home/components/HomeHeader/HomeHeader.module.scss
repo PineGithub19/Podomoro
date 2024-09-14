@@ -45,10 +45,11 @@
   }
 }
 
-.hourglass_icon,
-.fire_icon {
+.choose_music_icon,
+.background_icon {
   font-size: 2rem;
   color: var(--white-color);
+  cursor: pointer;
 }
 
 .header_menu_icon,
@@ -78,34 +79,4 @@
   font-weight: bold;
   color: var(--white-color);
   margin-left: 16px;
-}
-
-/* Header Active */
-.header_active {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  width: var(--primary-width);
-  height: var(--primary-header-height);
-}
-
-.music_icon {
-  font-size: 3rem;
-  color: var(--white-color);
-  cursor: pointer;
-}
-
-.music_icon_container.musicInActive {
-  position: relative;
-  cursor: pointer;
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -20%;
-    transform: rotate(45deg);
-    width: 40px;
-    height: 2px;
-    background-color: var(--white-color);
-  }
 }

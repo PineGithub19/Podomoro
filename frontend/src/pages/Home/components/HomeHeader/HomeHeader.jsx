@@ -1,29 +1,34 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faHeadphones,
-  faHourglassStart,
-} from "@fortawesome/free-solid-svg-icons";
-import { faFire, faCoins } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faImage, faMusic } from "@fortawesome/free-solid-svg-icons";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 import styles from "./HomeHeader.module.scss";
+
 import SideBar from "../../../../components/SideBar";
+// import Background from "../Background/Background";
+import Music from "../Music/Music";
+import HomeHeaderActive from "../HomeHeaderActive/HomeHeaderActive";
+
 import { request } from "../../../../api/request";
 import Cookies from "universal-cookie";
 
 const cx = classNames.bind(styles);
 
 function HomeHeader({ isRunning }) {
-  const [isMusicActive, setIsMusicActive] = useState(true);
   const [isSideBarActive, setIsSideBarActive] = useState(false);
   const [coins, setMyCoins] = useState(Number(0));
 
-  const handleIsMusicActive = () => {
-    setIsMusicActive(!isMusicActive);
-  };
+  /** Background */
+  // const [activeBackground, setActiveBackground] = useState(false);
+  // const [backgroundLink, setBackgroundLink] = useState("");
+
+  /** Music */
+  const [activeMusic, setActiveMusic] = useState(false); // toggle the input audio box
+  const [doneInputMusicLink, setDoneInputMusicLink] = useState(false);
+  const [videoId, setVideoId] = useState("");
 
   const handleIsSideBarActive = () => {
     setIsSideBarActive(!isSideBarActive);
@@ -60,6 +65,12 @@ function HomeHeader({ isRunning }) {
     fetchSetMyCoins();
   }, []);
 
+  /** Music control */
+
+  const handleActiveMusic = () => {
+    setActiveMusic(!activeMusic);
+  };
+
   return (
     <>
       {!isRunning ? (
@@ -72,10 +83,22 @@ function HomeHeader({ isRunning }) {
             />
             <div className={cx("header_options")}>
               <FontAwesomeIcon
-                className={cx("hourglass_icon")}
-                icon={faHourglassStart}
+                className={cx("choose_music_icon")}
+                icon={faMusic}
+                onClick={handleActiveMusic}
               />
-              <FontAwesomeIcon className={cx("fire_icon")} icon={faFire} />
+              <FontAwesomeIcon
+                className={cx("background_icon")}
+                icon={faImage}
+              />
+
+              {activeMusic && (
+                <Music
+                  handleVideoId={setVideoId}
+                  handleActiveMusic={setActiveMusic}
+                  handleDoneInputMusicLink={setDoneInputMusicLink}
+                />
+              )}
             </div>
             <div className={cx("coins")}>
               <FontAwesomeIcon
@@ -87,19 +110,7 @@ function HomeHeader({ isRunning }) {
           </div>
         </div>
       ) : (
-        <div className={cx("header_active")}>
-          <div
-            className={cx("music_icon_container", {
-              musicInActive: isMusicActive === false,
-            })}
-          >
-            <FontAwesomeIcon
-              icon={faHeadphones}
-              className={cx("music_icon")}
-              onClick={handleIsMusicActive}
-            />
-          </div>
-        </div>
+        <HomeHeaderActive videoId={videoId} />
       )}
       {isSideBarActive && (
         <SideBar

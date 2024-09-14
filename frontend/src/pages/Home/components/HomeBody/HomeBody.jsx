@@ -8,8 +8,8 @@ import Cookies from "universal-cookie";
 import { request } from "../../../../api/request";
 
 const cx = classNames.bind(styles);
-const DEFAULT_MINUTE = 0;
-const DEFAULT_SECOND = 5;
+const DEFAULT_MINUTE = 10;
+const DEFAULT_SECOND = 0;
 
 function addLeadingZero(value) {
   return value.toString().padStart(2, "0");
@@ -133,7 +133,7 @@ function HomeBody({ isRunning, setIsRunning }) {
       const cookies = new Cookies();
       const token = cookies.get("token");
       const duration = DEFAULT_MINUTE * 60 + DEFAULT_SECOND;
-      console.log(startDatePlanting, startDatePlanting.toISOString());
+      // console.log(startDatePlanting, startDatePlanting.toISOString());
 
       try {
         await request.post("/planting/complete", {
