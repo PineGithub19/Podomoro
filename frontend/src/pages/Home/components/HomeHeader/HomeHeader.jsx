@@ -27,7 +27,7 @@ function HomeHeader({ isRunning }) {
 
   /** Music */
   const [activeMusic, setActiveMusic] = useState(false); // toggle the input audio box
-  const [doneInputMusicLink, setDoneInputMusicLink] = useState(false);
+  const [, setDoneInputMusicLink] = useState(false);
   const [videoId, setVideoId] = useState("");
 
   const handleIsSideBarActive = () => {

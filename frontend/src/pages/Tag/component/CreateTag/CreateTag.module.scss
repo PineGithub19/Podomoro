@@ -1,0 +1,59 @@
+:root {
+  --width-create-tag: 400px;
+}
+
+.wrapper_create_tag {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+  z-index: 999;
+}
+
+.create_tag_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 32px;
+  background-color: var(--yellow-brown-color);
+  border-radius: 10px;
+
+  width: var(--width-create-tag);
+}
+
+.create_tag_title {
+  font-size: 2.8rem;
+  margin-bottom: 24px;
+}
+
+.create_tag_name,
+.create_tag_color {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1.6rem;
+  border-radius: 6px;
+
+  outline: none;
+}
+
+.create_tag_name {
+  margin-bottom: 16px;
+}
+
+.create_tag_button {
+  margin-top: 24px;
+  padding: 8px 24px;
+  background-color: var(--primary-green);
+  border-radius: 8px;
+  color: var(--white-color);
+  font-size: 1.8rem;
+
+  margin-left: auto;
+}

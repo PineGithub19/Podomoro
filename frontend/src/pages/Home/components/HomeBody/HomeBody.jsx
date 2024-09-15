@@ -4,12 +4,13 @@ import classNames from "classnames/bind";
 import styles from "./HomeBody.module.scss";
 import PlantStatus from "../PlantStatus/PlantStatus";
 import TreeMenu from "../TreeMenu";
+import BreakTime from "../BreakTime";
 import Cookies from "universal-cookie";
 import { request } from "../../../../api/request";
 
 const cx = classNames.bind(styles);
-const DEFAULT_MINUTE = 10;
-const DEFAULT_SECOND = 0;
+const DEFAULT_MINUTE = 0;
+const DEFAULT_SECOND = 5;
 
 function addLeadingZero(value) {
   return value.toString().padStart(2, "0");
@@ -31,6 +32,8 @@ function HomeBody({ isRunning, setIsRunning }) {
   const [showTreeMenu, setShowTreeMenu] = useState(false);
   const [isCompletePlanting, setIsCompletePlanting] = useState(false);
 
+  const [isBreakingTime, setIsBreakingTime] = useState(false);
+
   const handleIsCanceled = () => {
     setIsCanceled(!isCanceled);
   };
@@ -47,6 +50,7 @@ function HomeBody({ isRunning, setIsRunning }) {
       setIsCompletePlanting(true);
       setEndDatePlanting(new Date());
       setStatusPlanting("Complete");
+      setIsBreakingTime(true);
     }
 
     if (!isRunning) {
@@ -133,7 +137,6 @@ function HomeBody({ isRunning, setIsRunning }) {
       const cookies = new Cookies();
       const token = cookies.get("token");
       const duration = DEFAULT_MINUTE * 60 + DEFAULT_SECOND;
-      // console.log(startDatePlanting, startDatePlanting.toISOString());
 
       try {
         await request.post("/planting/complete", {
@@ -159,43 +162,47 @@ function HomeBody({ isRunning, setIsRunning }) {
 
   return (
     <>
-      <div className={cx("wrapper")}>
-        <div className={cx("header")}>
-          <p className={cx("welcome_paragraph")}>Start planting today!</p>
-        </div>
-        <div className={cx("body")}>
-          <div className={cx("timer")} onClick={handleShowTreeMenu}>
-            <div className={cx("circle")} style={{ "--timer-value": value }}>
-              <div className={cx("time")}>
-                <p className={cx("minute")}>{addLeadingZero(minuteLeft)}</p>
-                <p className={cx("dot")}>:</p>
-                <p className={cx("second")}>{addLeadingZero(secondLeft)}</p>
+      {!isBreakingTime ? (
+        <div className={cx("wrapper")}>
+          <div className={cx("header")}>
+            <p className={cx("welcome_paragraph")}>Start planting today!</p>
+          </div>
+          <div className={cx("body")}>
+            <div className={cx("timer")} onClick={handleShowTreeMenu}>
+              <div className={cx("circle")} style={{ "--timer-value": value }}>
+                <div className={cx("time")}>
+                  <p className={cx("minute")}>{addLeadingZero(minuteLeft)}</p>
+                  <p className={cx("dot")}>:</p>
+                  <p className={cx("second")}>{addLeadingZero(secondLeft)}</p>
+                </div>
               </div>
             </div>
+            {showTreeMenu && (
+              <TreeMenu
+                setShowTreeMenu={setShowTreeMenu}
+                setCurrentTreeId={setCurrentTreeId}
+              />
+            )}
           </div>
-          {showTreeMenu && (
-            <TreeMenu
-              setShowTreeMenu={setShowTreeMenu}
-              setCurrentTreeId={setCurrentTreeId}
-            />
-          )}
+          <div className={cx("footer")}>
+            <PlantStatus setCurrentStatusId={setCurrentStatusId} />
+            {!isRunning ? (
+              <button className={cx("plant_btn")} onClick={handlePlantTree}>
+                Plant
+              </button>
+            ) : (
+              <button
+                className={cx("plant_btn_cancel")}
+                onClick={handleIsCanceled}
+              >
+                Give up
+              </button>
+            )}
+          </div>
         </div>
-        <div className={cx("footer")}>
-          <PlantStatus setCurrentStatusId={setCurrentStatusId} />
-          {!isRunning ? (
-            <button className={cx("plant_btn")} onClick={handlePlantTree}>
-              Plant
-            </button>
-          ) : (
-            <button
-              className={cx("plant_btn_cancel")}
-              onClick={handleIsCanceled}
-            >
-              Give up
-            </button>
-          )}
-        </div>
-      </div>
+      ) : (
+        <BreakTime handleBreakTime={setIsBreakingTime} />
+      )}
       {isRunning && isCanceled && (
         <div className={cx("popup_canceled")}>
           <div className={cx("popup_canceled_container")}>

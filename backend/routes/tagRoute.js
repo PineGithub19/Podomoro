@@ -62,7 +62,7 @@ router.get("/get-tags", async (req, res) => {
     if (!token) {
       return res
         .status(400)
-        .json({ message: "Date and authorization token are required" });
+        .json({ message: "Authorization token are required" });
     }
 
     const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

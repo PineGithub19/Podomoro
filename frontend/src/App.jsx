@@ -4,6 +4,7 @@ import Forest from "./pages/Forest";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import Store from "./pages/Store";
+import Tag from "./pages/Tag";
 // import CreateTree from "./pages/CreateTree";
 // import ShowTree from "./pages/ShowTree";
 // import EditTree from "./pages/EditTree";
@@ -18,6 +19,7 @@ function App() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/store" element={<Store />} />
+      <Route path="/tag" element={<Tag />} />
       {/* <Route path="/trees/create" element={<CreateTree />} />
       <Route path="/trees/details/:id" element={<ShowTree />} />
       <Route path="/trees/edit/:id" element={<EditTree />} />

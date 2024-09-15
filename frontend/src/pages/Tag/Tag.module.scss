@@ -1,0 +1,106 @@
+:root {
+  --width-body-tags: 600px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: var(--dark-green-color);
+  min-height: 100vh;
+  max-height: 100%;
+}
+
+.header {
+  width: 100%;
+  background-color: var(--primary-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header_container {
+  width: var(--primary-width);
+  height: var(--primary-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+}
+
+.header_title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 2.4rem;
+  color: var(--white-color);
+}
+
+.header_menu_icon {
+  font-size: 2.4rem;
+  color: var(--white-color);
+  cursor: pointer;
+}
+
+.body {
+  width: 100%;
+  padding: 64px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body_container {
+  width: var(--width-body-tags);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tags */
+
+.tags_list {
+  width: 100%;
+}
+
+.tag_item {
+  width: 100%;
+  padding: 24px 0;
+  border-bottom: 1px solid #ccc;
+
+  display: flex;
+  align-items: center;
+}
+
+.tag_item_dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50px;
+  background-color: var(--dot-color);
+  margin-right: 16px;
+}
+
+.tag_item_title {
+  font-size: 1.8rem;
+  color: var(--white-color);
+}
+
+/* Create Tag */
+
+.create_tag {
+  padding: 24px 0;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.create_tag_title {
+  font-size: 1.8rem;
+  color: var(--white-color);
+  margin-left: 26px;
+}

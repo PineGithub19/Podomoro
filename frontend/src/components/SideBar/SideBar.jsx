@@ -31,7 +31,7 @@ const MENU = [
   {
     item: "Tags",
     icon: <FontAwesomeIcon icon={faTag} className={cx("menu_icon")} />,
-    to: "/tags",
+    to: "/tag",
   },
   {
     item: "Store",
