@@ -18,25 +18,9 @@
 .status_dot {
   width: 10px;
   height: 10px;
-  background-color: var(--green-gray-color);
+  background-color: var(--status-dot-color);
   border-radius: 50%;
   margin-right: 8px;
-}
-
-.status_dot.study {
-  background-color: #00ffff;
-}
-
-.status_dot.rest {
-  background-color: #87ceeb;
-}
-
-.status_dot.entertainment {
-  background-color: #98fb98;
-}
-
-.status_dot.other {
-  background-color: #ff5733;
 }
 
 .status_text {
@@ -70,6 +54,20 @@
   padding: 8px 16px;
   background-color: #eee;
   border-radius: 10px 10px 0px 0px;
+}
+
+.popup_status_body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 400px;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background-color: transparent;
+  }
 }
 
 .popup_item {

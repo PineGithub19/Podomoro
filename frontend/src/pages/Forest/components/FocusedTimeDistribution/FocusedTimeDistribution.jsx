@@ -10,6 +10,7 @@ import { Bar } from "react-chartjs-2";
 const cx = classNames.bind(styles);
 
 function FocusedTimeDistribution({ data, activeDate = 0 }) {
+  console.log(data);
   const [labels, setLabels] = useState([]);
   const [totalFocusedTime, setTotalFocusedTime] = useState(0);
   const [dataVisualization, setDataVisualization] = useState(data);

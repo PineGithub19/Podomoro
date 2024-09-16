@@ -11,7 +11,7 @@ import { faHeadphones } from "@fortawesome/free-solid-svg-icons";
 const cx = classNames.bind(styles);
 
 function HomeHeaderActive({ videoId }) {
-  const [isMusicActive, setIsMusicActive] = useState(false); // music icon
+  const [isMusicActive, setIsMusicActive] = useState(true); // music icon
   const playerRef = useRef(null);
 
   const handleIsMusicActive = () => {
@@ -54,7 +54,7 @@ function HomeHeaderActive({ videoId }) {
             videoId={videoId} // Use the video ID here
             opts={{
               playerVars: {
-                autoplay: 0,
+                autoplay: 1,
                 controls: 0,
                 modestbranding: 1,
                 showinfo: 0,

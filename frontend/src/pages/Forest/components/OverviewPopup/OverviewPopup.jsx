@@ -6,22 +6,14 @@ import Search from "./components/Search/Search";
 
 const cx = classNames.bind(styles);
 
-const PLANT_STATUS = ["Study", "Rest", "Entertainment", "Other"];
-
 function OverviewPopup({
+  deselectAll,
+  setDeselectAll,
   setIsOverviewPopup,
   currentStatues,
   handleChangeCurrentStatuses,
 }) {
-  const [deselectAll, setDeselectAll] = useState(true);
-  const [checkedStatues, setCheckedStatuses] = useState(() => {
-    const result = PLANT_STATUS.map((status) => {
-      if (currentStatues.find((item) => item === status)) {
-        return status;
-      }
-    });
-    return result.filter((item) => item !== undefined);
-  });
+  const [checkedStatues, setCheckedStatuses] = useState(currentStatues);
   const [isClicked, setIsClicked] = useState(false);
   const [tagsResult, setTagsResult] = useState([]);
 
@@ -59,10 +51,10 @@ function OverviewPopup({
       handleChangeCurrentStatuses([]);
     } else {
       /** In thhe future, maybe the user can create more custome tags, these lines will be replaced by an api calling! */
-      setCheckedStatuses(() => PLANT_STATUS.map((item) => item));
-      handleChangeCurrentStatuses(() => PLANT_STATUS.map((item) => item));
+      setCheckedStatuses(() => tagsResult.map((item) => item.name));
+      handleChangeCurrentStatuses(() => tagsResult.map((item) => item.name));
     }
-  }, [deselectAll, isClicked, handleChangeCurrentStatuses]);
+  }, [deselectAll, isClicked, handleChangeCurrentStatuses, tagsResult]);
 
   return (
     <div className={cx("wrapper")}>
@@ -81,45 +73,21 @@ function OverviewPopup({
         </div>
         <div className={cx("body")}>
           <Search handleData={setTagsResult} />
-          {tagsResult.length === 0
-            ? PLANT_STATUS.map((item, index) => (
-                <div className={cx("tag_item")} key={index}>
-                  <div
-                    className={cx("tag_item_dot", {
-                      study: index === 0,
-                      rest: index === 1,
-                      entertainment: index === 2,
-                      other: index === 3,
-                    })}
-                  ></div>
-                  <p className={cx("tag_item_name")}>{item}</p>
-                  <input
-                    type="checkbox"
-                    className={cx("tag_item_checkbox")}
-                    checked={checkedStatues.includes(item)}
-                    onChange={() => handleChangeCheckedStatus(item)}
-                  />
-                </div>
-              ))
-            : tagsResult.map((item, index) => (
-                <div className={cx("tag_item")} key={index}>
-                  <div
-                    className={cx("tag_item_dot", {
-                      study: item.name === "Study",
-                      rest: item.name === "Rest",
-                      entertainment: item.name === "Entertainment",
-                      other: item.name === "Other",
-                    })}
-                  ></div>
-                  <p className={cx("tag_item_name")}>{item.name}</p>
-                  <input
-                    type="checkbox"
-                    className={cx("tag_item_checkbox")}
-                    checked={checkedStatues.includes(item.name)}
-                    onChange={() => handleChangeCheckedStatus(item.name)}
-                  />
-                </div>
-              ))}
+          {tagsResult.map((item) => (
+            <div className={cx("tag_item")} key={item._id}>
+              <div
+                className={cx("tag_item_dot")}
+                style={{ "--tag-item-dot-color": `${item.color}` }}
+              ></div>
+              <p className={cx("tag_item_name")}>{item.name}</p>
+              <input
+                type="checkbox"
+                className={cx("tag_item_checkbox")}
+                checked={checkedStatues.includes(item.name)}
+                onChange={() => handleChangeCheckedStatus(item.name)}
+              />
+            </div>
+          ))}
         </div>
         <div className={cx("footer")}>
           <p className={cx("footer_info")}>
@@ -146,6 +114,8 @@ function OverviewPopup({
 }
 
 OverviewPopup.propTypes = {
+  deselectAll: PropTypes.bool,
+  setDeselectAll: PropTypes.func,
   setIsOverviewPopup: PropTypes.func,
   currentStatues: PropTypes.array,
   handleChangeCurrentStatuses: PropTypes.func,

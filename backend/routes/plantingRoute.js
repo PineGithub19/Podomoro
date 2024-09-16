@@ -107,9 +107,11 @@ router.get("/get-by-hours", async (req, res) => {
       });
 
       if (plantings.length > 0) {
-        const totalSeconds = plantings.reduce((acc, planting) => {
-          return acc + planting.duration;
-        }, 0);
+        const totalSeconds = plantings.reduce(
+          (acc, planting) =>
+            planting.status === "Complete" ? acc + planting.duration : acc,
+          0
+        );
 
         // Store total planting time for the current hour
         hourlyPlantings[localHour] = totalSeconds;
@@ -199,9 +201,11 @@ router.get("/get-by-week", async (req, res) => {
         tag: { $in: tags },
       });
 
-      const totalSeconds = plantings.reduce((acc, planting) => {
-        return acc + planting.duration;
-      }, 0);
+      const totalSeconds = plantings.reduce(
+        (acc, planting) =>
+          planting.status === "Complete" ? acc + planting.duration : acc,
+        0
+      );
 
       weekData.push({
         date: startDate.getDay(), // 0 -> 6: Sun -> Sat
@@ -261,7 +265,7 @@ router.get("/get-by-month", async (req, res) => {
       });
 
       const totalSeconds = plantings.reduce(
-        (acc, curr) => acc + curr.duration,
+        (acc, curr) => (curr.status === "Complete" ? acc + curr.duration : acc),
         0
       );
 
@@ -313,7 +317,7 @@ router.get("/get-by-year", async (req, res) => {
       });
 
       const totalSeconds = plantings.reduce(
-        (acc, curr) => acc + curr.duration,
+        (acc, curr) => (curr.status === "Complete" ? acc + curr.duration : acc),
         0
       );
 

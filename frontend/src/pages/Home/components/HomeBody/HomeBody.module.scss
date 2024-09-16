@@ -136,6 +136,9 @@
 
 .popup_canceled_text {
   margin-bottom: 32px;
+  text-wrap: wrap;
+  text-justify: inter-word;
+  max-width: 300px;
 }
 
 .popup_canceled_btn_container {

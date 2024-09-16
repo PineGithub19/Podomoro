@@ -2,20 +2,66 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import styles from "./TagDistribution.module.scss";
+import { request } from "../../../../api/request";
+import Cookies from "universal-cookie";
 
 // eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
 const cx = classNames.bind(styles);
-const PLANT_STATUS = ["Study", "Rest", "Entertainment", "Other"]; // 0 -> 3
 
 function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
   const [totalTagsFrequency, setTotalTagsFrequency] = useState(0);
   const [sortedTagsFrequency, setSortedTagsFrequency] = useState({});
 
+  /** Get Tags */
+  const [myTags, setMyTags] = useState([]);
+  const [commonTags, setCommonTags] = useState([]);
+
   useEffect(() => {
-    const sortedObject = PLANT_STATUS.reduce((acc, currentKey) => {
+    const fetchGetCommonTags = async () => {
+      try {
+        const response = await request.get("/tag/get-common-tags");
+
+        if (response.status === 200) {
+          setCommonTags(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchGetCommonTags();
+  }, []);
+
+  useEffect(() => {
+    const fetchGetMyTags = async () => {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+
+      try {
+        const response = await request.get("/tag/get-tags", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setMyTags(commonTags.concat(response.data));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (commonTags.length > 0) {
+      fetchGetMyTags();
+    }
+  }, [commonTags]);
+
+  useEffect(() => {
+    const STATUS = myTags.map((item) => item.name);
+    const sortedObject = STATUS.reduce((acc, currentKey) => {
       if (Object.prototype.hasOwnProperty.call(tagsFrequency, currentKey)) {
         acc[currentKey] = tagsFrequency[currentKey];
       } else {
@@ -30,7 +76,7 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
     setTotalTagsFrequency(
       Object.values(tagsFrequency).reduce((acc, curr) => acc + curr, 0)
     );
-  }, [tagsFrequency]);
+  }, [myTags, tagsFrequency]);
 
   return (
     <div className={cx("tag_distribution")}>
@@ -39,12 +85,12 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
         {Object.keys(sortedTagsFrequency).length > 0 && (
           <Doughnut
             data={{
-              labels: ["Study", "Rest", "Entertainment", "Other"],
+              labels: myTags.map((item) => item.name),
               datasets: [
                 {
                   label: Object.keys(sortedTagsFrequency),
                   data: Object.values(sortedTagsFrequency),
-                  backgroundColor: ["#00ffff", "#87ceeb", "#98fb98", "#ff5733"],
+                  backgroundColor: myTags.map((item) => item.color),
                 },
               ],
             }}
@@ -52,29 +98,26 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
         )}
       </div>
       <div className={cx("tag_distribution_categories")}>
-        {PLANT_STATUS.map((item, index) => (
-          <div className={cx("tag_distribution_item_container")} key={index}>
+        {myTags.map((item) => (
+          <div className={cx("tag_distribution_item_container")} key={item._id}>
             <div className={cx("tag_distribution_item")}>
               <div
-                className={cx("tag_distribution_item_dot", {
-                  study: index === 0,
-                  rest: index === 1,
-                  entertainment: index === 2,
-                  other: index === 3,
-                })}
+                className={cx("tag_distribution_item_dot")}
+                style={{ "--tag-distribution-item-dot-color": `${item.color}` }}
               ></div>
-              <p className={cx("tag_distribution_item_text")}>{item}</p>
+              <p className={cx("tag_distribution_item_text")}>{item.name}</p>
             </div>
             <div className={cx("tag_distribution_statistic")}>
               <p className={cx("tag_distribution_statistic_percentage")}>
                 {(
-                  (sortedTagsFrequency[item] / totalTagsFrequency) *
+                  (sortedTagsFrequency[item.name] / totalTagsFrequency) *
                   100
                 ).toFixed(2)}{" "}
                 %
               </p>
               <p className={cx("tag_distribution_statistic_value")}>
-                {tagMinutesCounts[item] ? tagMinutesCounts[item] : 0} M
+                {tagMinutesCounts[item.name] ? tagMinutesCounts[item.name] : 0}{" "}
+                M
               </p>
             </div>
           </div>

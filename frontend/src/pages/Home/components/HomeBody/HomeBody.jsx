@@ -207,7 +207,8 @@ function HomeBody({ isRunning, setIsRunning }) {
         <div className={cx("popup_canceled")}>
           <div className={cx("popup_canceled_container")}>
             <p className={cx("popup_canceled_text")}>
-              Are you sure you want to give up?
+              Are you sure you want to give up? Your study time will not be
+              counted 😢
             </p>
             <div className={cx("popup_canceled_btn_container")}>
               <button

@@ -47,24 +47,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50px;
-  background-color: var(--primary-green);
+  background-color: var(--tag-distribution-item-dot-color);
   margin-right: 8px;
-}
-
-.tag_distribution_item_dot.study {
-  background-color: #00ffff;
-}
-
-.tag_distribution_item_dot.rest {
-  background-color: #87ceeb;
-}
-
-.tag_distribution_item_dot.entertainment {
-  background-color: #98fb98;
-}
-
-.tag_distribution_item_dot.other {
-  background-color: #ff5733;
 }
 
 .tag_distribution_item_text {

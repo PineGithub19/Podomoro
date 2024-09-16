@@ -12,6 +12,7 @@ import Cookies from "universal-cookie";
 const cx = classNames.bind(styles);
 
 function Search({ handleData }) {
+  /** By default, if the search bar is empty, it will return all tags on the screen */
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 500);
 
