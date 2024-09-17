@@ -1,0 +1,141 @@
+:root {
+  --width-note: 500px;
+  --height-note: 800px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 999;
+}
+
+.wrapper {
+  position: fixed;
+  right: 3%;
+  top: 50%;
+  bottom: 0;
+
+  transform: translateY(-50%);
+
+  height: var(--height-note);
+  width: var(--width-note);
+  background-color: #ffe5b4;
+  border-radius: 10px;
+  box-shadow: 0 0 4px 0 rgba($color: #000, $alpha: 0.25);
+
+  padding: 24px;
+  z-index: 99;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  animation: SlideIn 0.5s ease;
+}
+
+.wrapper.close {
+  animation: SlideOut 0.5s ease;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+
+  width: 100%;
+  position: relative;
+}
+
+.note_title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.close_note_icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.body {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    background-color: transparent;
+  }
+}
+
+.note_item {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+
+  margin-bottom: 24px;
+}
+
+.note_check_box {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--green-medium-color);
+  margin-right: 16px;
+}
+
+.note_input {
+  width: 100%;
+  padding: 4px;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 2rem;
+
+  background-color: transparent;
+  border-bottom: 1px solid rgba($color: #000, $alpha: 0.5);
+
+  outline: none;
+}
+
+.footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.add_note_icon {
+  font-size: 2.8rem;
+  color: var(--green-medium-color);
+  cursor: pointer;
+}
+
+@keyframes SlideIn {
+  from {
+    right: -10%;
+    opacity: 0;
+  }
+  to {
+    right: 3%;
+    opacity: 1;
+  }
+}
+
+@keyframes SlideOut {
+  from {
+    right: 3%;
+    opacity: 1;
+  }
+  to {
+    right: -10%;
+    opacity: 0;
+  }
+}

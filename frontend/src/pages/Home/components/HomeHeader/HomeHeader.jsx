@@ -1,14 +1,18 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faImage, faMusic } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faMusic,
+  faStickyNote,
+} from "@fortawesome/free-solid-svg-icons";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 
 import classNames from "classnames/bind";
 import styles from "./HomeHeader.module.scss";
 
 import SideBar from "../../../../components/SideBar";
-// import Background from "../Background/Background";
+import Note from "../Note/Note";
 import Music from "../Music/Music";
 import HomeHeaderActive from "../HomeHeaderActive/HomeHeaderActive";
 
@@ -21,9 +25,8 @@ function HomeHeader({ isRunning }) {
   const [isSideBarActive, setIsSideBarActive] = useState(false);
   const [coins, setMyCoins] = useState(Number(0));
 
-  /** Background */
-  // const [activeBackground, setActiveBackground] = useState(false);
-  // const [backgroundLink, setBackgroundLink] = useState("");
+  /** Note */
+  const [activeNote, setActiveNote] = useState(false);
 
   /** Music */
   const [activeMusic, setActiveMusic] = useState(false); // toggle the input audio box
@@ -88,8 +91,9 @@ function HomeHeader({ isRunning }) {
                 onClick={handleActiveMusic}
               />
               <FontAwesomeIcon
-                className={cx("background_icon")}
-                icon={faImage}
+                className={cx("note_icon")}
+                icon={faStickyNote}
+                onClick={() => setActiveNote(!activeNote)}
               />
 
               {activeMusic && (
@@ -118,6 +122,7 @@ function HomeHeader({ isRunning }) {
           setIsSideBarActive={setIsSideBarActive}
         />
       )}
+      {activeNote && <Note handleActiveNote={setActiveNote} />}
     </>
   );
 }

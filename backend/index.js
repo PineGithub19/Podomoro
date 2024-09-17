@@ -9,6 +9,7 @@ import authRoute from "./routes/authRoute.js";
 import plantingRoute from "./routes/plantingRoute.js";
 import tagRoute from "./routes/tagRoute.js";
 import coinRoute from "./routes/coinRoute.js";
+import noteRoute from "./routes/noteRoute.js";
 
 dotenv.config();
 const app = express();
@@ -36,6 +37,8 @@ app.use("/planting", plantingRoute);
 app.use("/tag", tagRoute);
 
 app.use("/coin", coinRoute);
+
+app.use("/note", noteRoute);
 
 mongoose
   .connect(mongoDBURL)
