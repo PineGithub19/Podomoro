@@ -7,7 +7,11 @@ const router = express.Router();
 
 router.put("/my-coin/", async (req, res) => {
   try {
-    if (!req.body.token || !req.body.coin) {
+    if (
+      !req.body.token ||
+      req.body.coin === null ||
+      req.body.coin === undefined
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const userObj = jwt.verify(req.body.token, process.env.ACCESS_TOKEN_SECRET);

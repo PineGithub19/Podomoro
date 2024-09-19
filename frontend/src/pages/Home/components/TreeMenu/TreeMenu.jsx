@@ -71,9 +71,20 @@ function TreeMenu({ setShowTreeMenu, setCurrentTreeId }) {
     event.stopPropagation();
   };
 
-  const handleChooseActiveTree = (index) => {
-    setActiveTree(index);
-    setCurrentTreeId(trees[index]._id);
+  const handleChooseActiveTree = async (prevIndex, currIndex) => {
+    setActiveTree(currIndex);
+    setCurrentTreeId(trees[currIndex]._id);
+
+    try {
+      await request.put(`/trees/my-tree/${trees[prevIndex]._id}`, {
+        selected: false,
+      });
+      await request.put(`/trees/my-tree/${trees[currIndex]._id}`, {
+        selected: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -92,7 +103,7 @@ function TreeMenu({ setShowTreeMenu, setCurrentTreeId }) {
                 active: index === activeTree,
               })}
               key={tree._id}
-              onClick={() => handleChooseActiveTree(index)}
+              onClick={() => handleChooseActiveTree(activeTree, index)}
             >
               <img
                 src={tree.image}

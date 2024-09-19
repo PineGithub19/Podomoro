@@ -67,13 +67,13 @@ router.get("/get-notes", async (req, res) => {
 
 router.put("/update-note/:id", async (req, res) => {
   try {
-    if (
-      req.body.checked === undefined ||
-      req.body.checked === null ||
-      !req.body.description
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+    // if (
+    //   req.body.checked === undefined ||
+    //   req.body.checked === null ||
+    //   !req.body.description
+    // ) {
+    //   return res.status(400).json({ message: "All fields are required" });
+    // }
 
     const { id } = req.params;
     const result = await Note.findByIdAndUpdate(id, req.body);

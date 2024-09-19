@@ -92,6 +92,30 @@ router.get("/my-tree/", async (req, res) => {
   }
 });
 
+// Route for Update myTrees by ID
+router.put("/my-tree/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateFields = {};
+
+    if (req.body.selected !== undefined) {
+      updateFields.selected = req.body.selected;
+    }
+    if (req.body.buy !== undefined) {
+      updateFields.buy = req.body.buy;
+    }
+
+    const result = await MyTree.findOneAndUpdate({ treeId: id }, updateFields);
+
+    if (!result) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+    return res.status(200).json({ message: "Note updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // Route for Get Tree by ID
 router.get("/:id", async (req, res) => {
   try {

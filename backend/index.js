@@ -10,6 +10,7 @@ import plantingRoute from "./routes/plantingRoute.js";
 import tagRoute from "./routes/tagRoute.js";
 import coinRoute from "./routes/coinRoute.js";
 import noteRoute from "./routes/noteRoute.js";
+import musicRoute from "./routes/musicRoute.js";
 
 dotenv.config();
 const app = express();
@@ -39,6 +40,8 @@ app.use("/tag", tagRoute);
 app.use("/coin", coinRoute);
 
 app.use("/note", noteRoute);
+
+app.use("/music", musicRoute);
 
 mongoose
   .connect(mongoDBURL)

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./Store.module.scss";
 import StorePopup from "./components/StorePopup";
+import StoreMusicPopup from "./components/StoreMusicPopup";
 import { request } from "../../api/request";
 
 import SideBar from "../../components/SideBar";
@@ -18,6 +19,10 @@ function Store() {
   const [treesVisualization, setTreesVisualization] = useState([]);
 
   const [coins, setMyCoins] = useState(Number(0));
+
+  const [currentMusics, setCurrentMusics] = useState([]);
+  const [musics, setMusics] = useState([]);
+  const [musicsVisualization, setMusicsVisualization] = useState([]);
 
   const [activePopup, setActivePopup] = useState(false);
   const [isActivePopup, setIsActivePopup] = useState(null);
@@ -74,9 +79,43 @@ function Store() {
       }
     };
 
+    const fetchMyMusics = async () => {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+
+      try {
+        const response = await request.get("/music/current-music", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setCurrentMusics(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchMusics = async () => {
+      try {
+        const response = await request.get("/music");
+
+        if (response.status === 200) {
+          setMusics(currentMusics.concat(response.data.data));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchAllTrees();
     fetchMyTrees();
+    fetchMyMusics();
+    fetchMusics();
     fetchCoins();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coins]);
 
   useEffect(() => {
@@ -91,7 +130,19 @@ function Store() {
       }
       return groupedTrees;
     });
-  }, [trees, myTrees]);
+
+    if (musics.length === 0) {
+      return;
+    }
+
+    setMusicsVisualization(() => {
+      const groupedMusics = [];
+      for (let i = 0; i < musics.length; i += 2) {
+        groupedMusics.push(musics.slice(i, i + 2));
+      }
+      return groupedMusics;
+    });
+  }, [trees, myTrees, musics]);
 
   const checkUnlocked = (item) => {
     const res = myTrees.find((tree) => {
@@ -99,10 +150,6 @@ function Store() {
     });
     return res;
   };
-
-  //   useEffect(() => {
-  //     console.log(treesVisualization);
-  //   }, [treesVisualization]);
 
   return (
     <>
@@ -167,6 +214,51 @@ function Store() {
                   </div>
                   {item._id === isActivePopup && activePopup && (
                     <StorePopup
+                      handleActivePopup={setActivePopup}
+                      isUnlocked={checkUnlocked(item)}
+                      coins={coins}
+                      handleCoins={setMyCoins}
+                      data={item}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+          {musicsVisualization.map((visualItems, visualIndex) => (
+            <div className={cx("music_container")} key={visualIndex}>
+              {visualItems.map((item) => (
+                <div key={item._id}>
+                  <div
+                    className={cx("music_item")}
+                    key={item._id}
+                    onClick={() => {
+                      setActivePopup(true);
+                      setIsActivePopup(item._id);
+                    }}
+                  >
+                    <img
+                      className={cx("music_item_image")}
+                      src={item.image}
+                      alt={item.name}
+                    />
+                    <p className={cx("music_item_name")}>{item.name}</p>
+                    <div className={cx("music_item_footer")}>
+                      {checkUnlocked(item) ? (
+                        <p className={cx("unlocked")}>Unlocked</p>
+                      ) : (
+                        <div className={cx("price")}>
+                          <p className={cx("price_text")}>{item.coin}</p>
+                          <FontAwesomeIcon
+                            className={cx("price_coin_icon")}
+                            icon={faCoins}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {item._id === isActivePopup && activePopup && (
+                    <StoreMusicPopup
                       handleActivePopup={setActivePopup}
                       isUnlocked={checkUnlocked(item)}
                       coins={coins}

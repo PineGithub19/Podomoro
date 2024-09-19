@@ -10,7 +10,7 @@ import { request } from "../../../../api/request";
 
 const cx = classNames.bind(styles);
 const DEFAULT_MINUTE = 0;
-const DEFAULT_SECOND = 5;
+const DEFAULT_SECOND = 10;
 
 function addLeadingZero(value) {
   return value.toString().padStart(2, "0");

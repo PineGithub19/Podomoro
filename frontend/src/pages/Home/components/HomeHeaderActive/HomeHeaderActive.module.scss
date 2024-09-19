@@ -7,10 +7,15 @@
   height: var(--primary-header-height);
 }
 
-.music_icon {
+.music_icon,
+.note_icon {
   font-size: 3rem;
   color: var(--white-color);
   cursor: pointer;
+}
+
+.note_icon {
+  margin-right: 48px;
 }
 
 .music_icon_container.musicInActive {
@@ -20,9 +25,9 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -20%;
+    right: -8px;
     transform: rotate(45deg);
-    width: 40px;
+    width: 45px;
     height: 2px;
     background-color: var(--white-color);
   }
