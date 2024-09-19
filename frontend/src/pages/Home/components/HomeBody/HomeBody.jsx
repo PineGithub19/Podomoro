@@ -16,7 +16,7 @@ function addLeadingZero(value) {
   return value.toString().padStart(2, "0");
 }
 
-function HomeBody({ isRunning, setIsRunning }) {
+function HomeBody({ isRunning, setIsRunning, handleUpdateCoin }) {
   const [value, setValue] = useState(100);
   const [minuteLeft, setMinuteLeft] = useState(DEFAULT_MINUTE);
   const [secondLeft, setSecondLeft] = useState(DEFAULT_SECOND);
@@ -148,6 +148,25 @@ function HomeBody({ isRunning, setIsRunning }) {
           tag: currentStatusId,
           treeId: currentTreeId,
         });
+
+        const responseCoinsForUpdate = await request.get("/coin/my-coin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (responseCoinsForUpdate.status === 200) {
+          const updatedCoins = responseCoinsForUpdate.data[0].coin;
+
+          const updateCoinResponse = await request.put("/coin/my-coin", {
+            token: token,
+            coin: updatedCoins + 15,
+          });
+
+          if (updateCoinResponse.status === 200) {
+            handleUpdateCoin(true);
+          }
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -241,6 +260,7 @@ function HomeBody({ isRunning, setIsRunning }) {
 HomeBody.propTypes = {
   isRunning: PropTypes.bool.isRequired,
   setIsRunning: PropTypes.func.isRequired,
+  handleUpdateCoin: PropTypes.func.isRequired,
 };
 
 export default HomeBody;

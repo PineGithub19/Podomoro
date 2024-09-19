@@ -10,12 +10,17 @@ const cx = classNames.bind(styles);
 
 function Home() {
   const [isRunning, setIsRunning] = useState(false);
+  const [updateCoin, setUpdateCoin] = useState(false);
 
   return (
     <div className={cx("wrapper")}>
-      <HomeHeader isRunning={isRunning} />
+      <HomeHeader isRunning={isRunning} updateCoin={updateCoin} />
       <div className={cx("body")}>
-        <HomeBody isRunning={isRunning} setIsRunning={setIsRunning} />
+        <HomeBody
+          isRunning={isRunning}
+          setIsRunning={setIsRunning}
+          handleUpdateCoin={setUpdateCoin}
+        />
       </div>
     </div>
   );

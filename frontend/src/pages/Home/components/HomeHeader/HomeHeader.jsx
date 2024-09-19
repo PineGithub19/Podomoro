@@ -21,7 +21,7 @@ import Cookies from "universal-cookie";
 
 const cx = classNames.bind(styles);
 
-function HomeHeader({ isRunning }) {
+function HomeHeader({ isRunning, updateCoin }) {
   const [isSideBarActive, setIsSideBarActive] = useState(false);
   const [coins, setMyCoins] = useState(Number(0));
 
@@ -66,7 +66,7 @@ function HomeHeader({ isRunning }) {
 
     fetchGetMyCoins();
     fetchSetMyCoins();
-  }, []);
+  }, [updateCoin]);
 
   /** Music control */
 
@@ -129,6 +129,7 @@ function HomeHeader({ isRunning }) {
 
 HomeHeader.propTypes = {
   isRunning: PropTypes.bool,
+  updateCoin: PropTypes.bool,
 };
 
 export default HomeHeader;
