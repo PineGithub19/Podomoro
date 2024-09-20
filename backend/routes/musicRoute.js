@@ -63,6 +63,49 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.post("/create-newbie", async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({
+      username: userObj.username,
+    });
+    const basicMusic = await Music.findOne({
+      name: "Rain on a frozen lake",
+    });
+    const hasMusic = await MyMusic.findOne({
+      userId: userInfo._id,
+      musicId: basicMusic._id,
+    });
+
+    if (!hasMusic) {
+      const music = await MyMusic.create({
+        musicId: basicMusic._id,
+        buy: true,
+        current: true,
+        userId: userInfo._id,
+      });
+
+      res.status(200).json(music);
+    } else {
+      res.status(500).json({ message: "Not valid music for newbie" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const music = await Music.find({});

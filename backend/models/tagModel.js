@@ -10,6 +10,10 @@ const tagSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    current: {
+      type: Boolean,
+      required: true,
+    },
     userId: {
       type: String,
       required: false,

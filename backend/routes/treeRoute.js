@@ -33,6 +33,46 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Route for Save a new Tree for beginners -> save into the MyTree
+router.post("/create-newbie", async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const oakTree = await Tree.findOne({ name: "Oak" });
+    const hasOakTree = await MyTree.findOne({
+      userId: userInfo._id,
+      treeId: oakTree._id,
+    });
+
+    if (!hasOakTree) {
+      const tree = await MyTree.create({
+        userId: userInfo._id,
+        treeId: oakTree._id,
+        buy: true,
+        selected: true,
+      });
+
+      res.status(200).json(tree);
+    } else {
+      res.status(500).json({ message: "Not valid tree for newbie" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Route for Save a new MyTree
 router.post("/my-tree", async (req, res) => {
   try {

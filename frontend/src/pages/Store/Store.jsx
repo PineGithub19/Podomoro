@@ -151,6 +151,13 @@ function Store() {
     return res;
   };
 
+  const checkUnlockedMusic = (item) => {
+    const res = musics.find((music) => {
+      return music._id === item._id;
+    });
+    return res;
+  };
+
   return (
     <>
       <div className={cx("wrapper")}>
@@ -244,7 +251,7 @@ function Store() {
                     />
                     <p className={cx("music_item_name")}>{item.name}</p>
                     <div className={cx("music_item_footer")}>
-                      {checkUnlocked(item) ? (
+                      {checkUnlockedMusic(item) ? (
                         <p className={cx("unlocked")}>Unlocked</p>
                       ) : (
                         <div className={cx("price")}>
@@ -260,7 +267,7 @@ function Store() {
                   {item._id === isActivePopup && activePopup && (
                     <StoreMusicPopup
                       handleActivePopup={setActivePopup}
-                      isUnlocked={checkUnlocked(item)}
+                      isUnlocked={checkUnlockedMusic(item)}
                       coins={coins}
                       handleCoins={setMyCoins}
                       data={item}

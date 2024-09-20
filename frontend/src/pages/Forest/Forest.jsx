@@ -16,7 +16,7 @@ export const CurrentStatuesContext = createContext();
 function Forest() {
   const [isActiveSideBar, setIsActiveSideBar] = useState(false);
   const [isOverviewPopup, setIsOverviewPopup] = useState(false);
-  const [commonStatuses, setCommonStatues] = useState([]);
+  // const [commonStatuses, setCommonStatues] = useState([]);
   const [statues, setStatues] = useState([]);
 
   const [deselectAll, setDeselectAll] = useState(true);
@@ -29,20 +29,27 @@ function Forest() {
     setIsOverviewPopup(!isOverviewPopup);
   };
 
-  useEffect(() => {
-    const fetCommonStatuses = async () => {
-      try {
-        const response = await request.get("/tag/get-common-tags");
+  // useEffect(() => {
+  //   const fetCommonStatuses = async () => {
+  //     const cookies = new Cookies();
+  //     const token = cookies.get("token");
 
-        if (response.status === 200) {
-          setCommonStatues(response.data.map((item) => item.name));
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetCommonStatuses();
-  }, []);
+  //     try {
+  //       const response = await request.get("/tag/get-common-tags", {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       if (response.status === 200) {
+  //         setCommonStatues(response.data.map((item) => item.name));
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetCommonStatuses();
+  // }, []);
 
   useEffect(() => {
     const fetchStatuses = async () => {
@@ -57,9 +64,7 @@ function Forest() {
         });
 
         if (response.status === 200) {
-          setStatues(
-            commonStatuses.concat(response.data.map((item) => item.name))
-          );
+          setStatues(response.data.map((item) => item.name));
         }
       } catch (error) {
         console.log(error);
@@ -67,7 +72,7 @@ function Forest() {
     };
 
     fetchStatuses();
-  }, [commonStatuses]);
+  }, []);
 
   return (
     <>

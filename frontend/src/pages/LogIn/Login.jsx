@@ -19,6 +19,8 @@ function LogIn() {
   const [showMessage, setShowMessage] = useState(false);
   const [validMessage, setValidMessage] = useState(false);
 
+  const [isCookie, setIsCookie] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,8 +33,9 @@ function LogIn() {
       if (response.status === 200) {
         const cookies = new Cookies();
         cookies.set("token", response.data.accessToken);
+        setIsCookie(true);
 
-        navigateHome("/home");
+        // navigateHome("/home");
       }
     } catch (error) {
       setMessage(error.response.data.error);
@@ -54,6 +57,113 @@ function LogIn() {
       }, 3000);
     }
   }, [showMessage]);
+
+  /** Handle data for newbie */
+
+  useEffect(() => {
+    const createTreeForNewbie = async (token) => {
+      try {
+        await request.post(
+          "/trees/create-newbie",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const createTagsForNewbie = async (token) => {
+      try {
+        const tags = [
+          {
+            name: "Study",
+            color: "#00ffff",
+          },
+          {
+            name: "Rest",
+            color: "#87ceeb",
+          },
+          {
+            name: "Entertainment",
+            color: "#98fb98",
+          },
+          {
+            name: "Other",
+            color: "#ff5733",
+          },
+        ];
+
+        await Promise.all(
+          tags.map((item) =>
+            request.post(
+              "/tag/create-newbie",
+              {
+                name: item.name,
+                color: item.color,
+                current: false,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const createMusicForNewbie = async (token) => {
+      try {
+        await request.post(
+          "/music/create-newbie",
+          {},
+          {
+            headers: {
+              Authorization: `Beaer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const createCoinForNewbie = async (token) => {
+      try {
+        await request.post(
+          "/coin/my-coin-newbie",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (isCookie) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+
+      createTagsForNewbie(token);
+      createTreeForNewbie(token);
+      createMusicForNewbie(token);
+      createCoinForNewbie(token);
+      navigateHome("/home");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCookie]);
 
   return (
     <div className={cx("wrapper")}>

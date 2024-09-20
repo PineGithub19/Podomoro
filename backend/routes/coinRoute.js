@@ -68,6 +68,41 @@ router.post("/my-coin/", async (req, res) => {
   }
 });
 
+router.post("/my-coin-newbie", async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    if (!userObj) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const userInfo = await UserAccount.findOne({ username: userObj.username });
+    const existingUser = await Coin.findOne({
+      userId: userInfo._id,
+    });
+
+    if (!existingUser) {
+      const coin = await Coin.create({
+        userId: userInfo._id,
+        coin: 0,
+      });
+
+      res.status(200).json(coin);
+    } else {
+      res.status(500).json({ message: "Not valid coin for newbie" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/my-coin/", async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];

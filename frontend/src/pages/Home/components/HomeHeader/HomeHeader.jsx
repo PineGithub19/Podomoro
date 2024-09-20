@@ -43,7 +43,7 @@ function HomeHeader({ isRunning, updateCoin }) {
 
     const fetchGetMyCoins = async () => {
       try {
-        const response = await request.get("coin/my-coin", {
+        const response = await request.get("/coin/my-coin", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,7 +58,7 @@ function HomeHeader({ isRunning, updateCoin }) {
     };
 
     const fetchSetMyCoins = async () => {
-      await request.post("coin/my-coin", {
+      await request.post("/coin/my-coin", {
         token: token,
         coin: 0,
       });

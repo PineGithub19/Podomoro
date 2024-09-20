@@ -17,23 +17,31 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
 
   /** Get Tags */
   const [myTags, setMyTags] = useState([]);
-  const [commonTags, setCommonTags] = useState([]);
+  // const [commonTags, setCommonTags] = useState([]);
 
-  useEffect(() => {
-    const fetchGetCommonTags = async () => {
-      try {
-        const response = await request.get("/tag/get-common-tags");
+  // useEffect(() => {
+  //   const fetchGetCommonTags = async () => {
+  //     const cookies = new Cookies();
+  //     const token = cookies.get("token");
 
-        if (response.status === 200) {
-          setCommonTags(response.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  //     try {
+  //       const response = await request.get("/tag/get-common-tags", {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
 
-    fetchGetCommonTags();
-  }, []);
+  //       if (response.status === 200) {
+  //         console.log(response.data);
+  //         setCommonTags(response.data);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   fetchGetCommonTags();
+  // }, []);
 
   useEffect(() => {
     const fetchGetMyTags = async () => {
@@ -48,16 +56,14 @@ function TagDistribution({ tagsFrequency, tagMinutesCounts }) {
         });
 
         if (response.status === 200) {
-          setMyTags(commonTags.concat(response.data));
+          setMyTags(response.data);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    if (commonTags.length > 0) {
-      fetchGetMyTags();
-    }
-  }, [commonTags]);
+    fetchGetMyTags();
+  }, []);
 
   useEffect(() => {
     const STATUS = myTags.map((item) => item.name);
