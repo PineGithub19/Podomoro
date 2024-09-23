@@ -258,41 +258,59 @@ function ForestBody() {
           request.get(`/trees/${treeId}`)
         )
       );
-      setTreeFrequencyVisualization(treesResponse.map((tree) => tree.data));
+      const data = treesResponse.map((tree) => tree.data);
+      setTreeFrequencyVisualization(data);
+      getSortedFavoriteTrees(data);
     };
 
     if (Object.keys(treePlantingCounts).length > 0) {
       fetchTrees();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [treePlantingCounts]);
 
   /** Get favorite trees by order */
-  useEffect(() => {
+
+  function getSortedFavoriteTrees(data) {
     if (Object.keys(treePlantingCounts).length > 0) {
       const orderFavoriteTreesById = Object.keys(treePlantingCounts).sort(
         (a, b) => treePlantingCounts[b] - treePlantingCounts[a]
       );
 
-      const sortedFavoriteTrees = treeFrequencyVisualization.sort((a, b) => {
-        const aKey = Object.keys(a).find((key) =>
-          orderFavoriteTreesById.includes(key)
-        );
-        const bKey = Object.keys(b).find((key) =>
-          orderFavoriteTreesById.includes(key)
-        );
-
-        return (
-          orderFavoriteTreesById.indexOf(aKey) -
-          orderFavoriteTreesById.indexOf(bKey)
-        );
-      });
+      const sortedFavoriteTrees = orderFavoriteTreesById.map((id) =>
+        data.find((item) => item._id === id)
+      );
 
       setFavoriteTrees(sortedFavoriteTrees);
-    } else {
-      setTreeFrequencyVisualization([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [treePlantingCounts]);
+  }
+
+  // useEffect(() => {
+  //   if (
+  //     Object.keys(treePlantingCounts).length > 0 &&
+  //     treeFrequencyVisualization.length > 0
+  //   ) {
+  //     const orderFavoriteTreesById = Object.keys(treePlantingCounts).sort(
+  //       (a, b) => treePlantingCounts[b] - treePlantingCounts[a]
+  //     );
+
+  //     const sortedFavoriteTrees = treeFrequencyVisualization.sort((a, b) => {
+  //       const aKey = Object.keys(a).find((key) =>
+  //         orderFavoriteTreesById.includes(key)
+  //       );
+  //       const bKey = Object.keys(b).find((key) =>
+  //         orderFavoriteTreesById.includes(key)
+  //       );
+
+  //       return (
+  //         orderFavoriteTreesById.indexOf(bKey) -
+  //         orderFavoriteTreesById.indexOf(aKey)
+  //       );
+  //     });
+
+  //     setFavoriteTrees(sortedFavoriteTrees);
+  //   }
+  // }, [treePlantingCounts, treeFrequencyVisualization]);
 
   return (
     <div className={cx("wrapper")}>

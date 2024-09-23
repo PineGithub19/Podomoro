@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Playwrite CU", cursive;
+}
+
+.wrapper {
+  background-color: #50aa8d;
+  min-height: 100vh;
+  max-height: 100%;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.cointainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  padding: 64px;
+  background-color: #2f5e4e;
+  border-radius: 16px;
+  border-bottom: 8px solid #16423c;
+}
+
+.heading {
+  font-size: 4.8rem;
+  color: #fff;
+  margin-bottom: 48px;
+}
+
+.text {
+  color: #fff;
+  font-size: 1.6rem;
+  text-align: justify;
+}
+
+.footer {
+  margin-top: 48px;
+  margin-left: auto;
+
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+}

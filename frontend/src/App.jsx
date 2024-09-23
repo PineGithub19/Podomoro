@@ -5,25 +5,18 @@ import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import Store from "./pages/Store";
 import Tag from "./pages/Tag";
-// import CreateTree from "./pages/CreateTree";
-// import ShowTree from "./pages/ShowTree";
-// import EditTree from "./pages/EditTree";
-// import DeleteTree from "./pages/DeleteTree";
+import ProtectRoute from "./components/ProtectRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
-      <Route path="/forest" element={<Forest />} />
+      <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<LogIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/store" element={<Store />} />
-      <Route path="/tag" element={<Tag />} />
-      {/* <Route path="/trees/create" element={<CreateTree />} />
-      <Route path="/trees/details/:id" element={<ShowTree />} />
-      <Route path="/trees/edit/:id" element={<EditTree />} />
-      <Route path="/trees/delete/:id" element={<DeleteTree />} /> */}
+      <Route path="/home" element={<ProtectRoute element={<Home />} />} />
+      <Route path="/forest" element={<ProtectRoute element={<Forest />} />} />
+      <Route path="/store" element={<ProtectRoute element={<Store />} />} />
+      <Route path="/tag" element={<ProtectRoute element={<Tag />} />} />
     </Routes>
   );
 }

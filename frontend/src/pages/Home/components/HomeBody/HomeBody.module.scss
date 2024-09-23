@@ -71,8 +71,9 @@
 .second,
 .dot {
   font-size: 6.4rem;
-  font-weight: lighter;
+  font-weight: normal;
   color: var(--white-color);
+  letter-spacing: 4px;
   z-index: 99;
 }
 

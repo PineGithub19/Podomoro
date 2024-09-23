@@ -95,7 +95,7 @@ router.post("/create-newbie", async (req, res) => {
     const tag = await Tag.create({
       name: req.body.name,
       color: req.body.color,
-      current: req.body.current,
+      current: req.body.name === "Study" ? true : req.body.current,
       userId: userInfo._id,
     });
     res.status(201).json(tag);

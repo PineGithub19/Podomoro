@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./SideBar.module.scss";
 import classNames from "classnames/bind";
 import {
-  faGear,
+  // faGear,
   faHouse,
   faNewspaper,
   faRightFromBracket,
@@ -43,11 +43,11 @@ const MENU = [
     icon: <FontAwesomeIcon icon={faNewspaper} className={cx("menu_icon")} />,
     to: "/news",
   },
-  {
-    item: "Settings",
-    icon: <FontAwesomeIcon icon={faGear} className={cx("menu_icon")} />,
-    to: "/settings",
-  },
+  // {
+  //   item: "Settings",
+  //   icon: <FontAwesomeIcon icon={faGear} className={cx("menu_icon")} />,
+  //   to: "/settings",
+  // },
   {
     item: "Log out",
     icon: (
@@ -66,10 +66,6 @@ function SideBar({ isSideBarActive, setIsSideBarActive }) {
       setIsSideBarActive(false);
     }, 200);
   };
-
-  // useEffect(() => {
-  //   console.log(isActive);
-  // }, [isActive]);
 
   return (
     <div

@@ -65,7 +65,7 @@
 
   border-radius: 10px;
   margin-right: 8px;
-  padding: 4px 0;
+  padding: 4px;
 
   cursor: pointer;
 }
@@ -77,6 +77,8 @@
 .tree_image {
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  border-radius: 50px;
 }
 
 .tree_name {

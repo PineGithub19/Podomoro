@@ -78,6 +78,7 @@
   height: 64px;
   background-color: var(--white-color);
   border-radius: 50px;
+  object-fit: cover;
 }
 
 .view_trees_item_info {
@@ -197,6 +198,8 @@
 .favorite_trees_item_avatar {
   width: 64px;
   height: 64px;
+  border-radius: 50px;
+  object-fit: cover;
 }
 
 .favorite_trees_item_info {

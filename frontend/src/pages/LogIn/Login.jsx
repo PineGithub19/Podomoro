@@ -162,8 +162,7 @@ function LogIn() {
       createCoinForNewbie(token);
       navigateHome("/home");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCookie]);
+  }, [isCookie, navigateHome]);
 
   return (
     <div className={cx("wrapper")}>
