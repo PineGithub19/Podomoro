@@ -118,7 +118,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Route for get all music of a user which were bought
+// Route for get all musics of a user which were bought
 router.get("/current-music", async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
@@ -136,7 +136,7 @@ router.get("/current-music", async (req, res) => {
 
     const userInfo = await UserAccount.findOne({ username: userObj.username });
 
-    const music = await Music.find({ userId: userInfo._id });
+    const music = await MyMusic.find({ userId: userInfo._id });
 
     res.status(200).json(music);
   } catch (error) {

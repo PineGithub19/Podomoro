@@ -103,7 +103,7 @@ function Store() {
         const response = await request.get("/music");
 
         if (response.status === 200) {
-          setMusics(currentMusics.concat(response.data.data));
+          setMusics(response.data.data);
         }
       } catch (error) {
         console.log(error);
@@ -152,8 +152,8 @@ function Store() {
   };
 
   const checkUnlockedMusic = (item) => {
-    const res = musics.find((music) => {
-      return music._id === item._id;
+    const res = currentMusics.find((music) => {
+      return music.musicId === item._id;
     });
     return res;
   };

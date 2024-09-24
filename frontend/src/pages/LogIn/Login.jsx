@@ -194,7 +194,9 @@ function LogIn() {
               <input type="checkbox" className={cx("checkbox_remember_me")} />
               <p className={cx("remember_me_text")}>Remember me</p>
             </div>
-            <p className={cx("forgot_password")}>Forgot password?</p>
+            <Link to={"/forgotPassword"} className={cx("forgot_password")}>
+              Forgot password?
+            </Link>
           </div>
           <button className={cx("login_button")}>Login</button>
           <div className={cx("sign_up_container")}>
